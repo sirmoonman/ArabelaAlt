@@ -5,12 +5,14 @@ from .views import (
     dashboard_view,
     payment_verification_view,
     security_deposits_view,
+    admin_login_view,
     page_view,
 )
 
 app_name = "arabela_admin"
 
 urlpatterns = [
+    path("admin-login/", admin_login_view, name="admin_login"),
     path("", dashboard_view, name="dashboard"),
     path("rental-schedule/", rental_schedule_view, name="rental_schedule"),
     path("calendar/", rental_schedule_view, name="calendar"),

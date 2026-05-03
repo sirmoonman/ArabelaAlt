@@ -12,9 +12,18 @@ urlpatterns = [
     path("kid-suit/", views.collection_kid_suit, name="collection_kid_suit"),
     path("ball-gown/", views.collection_ball_gown, name="collection_ball_gown"),
     path("suit/", views.collection_suit, name="collection_suit"),
-    path("collections/wedding/products/<slug:slug>/", views.product_detail, name="product_detail"),
+    path(
+        "collections/wedding/products/<slug:slug>/",
+        views.legacy_wedding_product_url,
+    ),
+    path(
+        "collections/<str:collection>/products/<slug:slug>/",
+        views.product_detail,
+        name="product_detail",
+    ),
     path("selection/", views.selection, name="selection"),
     path("reservation/", views.reservation, name="reservation"),
     path("confirmation/", views.confirmation, name="confirmation"),
     path("reservations/", views.orders, name="orders"),
+    path("profile/", views.profile, name="profile"),
 ]

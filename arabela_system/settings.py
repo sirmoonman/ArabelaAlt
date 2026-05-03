@@ -101,16 +101,36 @@ WSGI_APPLICATION = 'arabela_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.fzlamerruducnuqtksbn',
-        'PASSWORD': '09488745992',
-        'HOST': 'aws-1-ap-northeast-2.pooler.supabase.com',
-        'PORT': '6543',
+# Database credentials come from `.env` (see `.env.example`). Hardcoding them in
+# this file risks committing secrets. Supabase: prefer Session pooler (same host,
+# port 5432, user postgres.<ref>) over Transaction pool (6543) for Django; use the
+# direct host db.<ref>.supabase.co only if your network resolves it (often IPv6).
+_db_name = os.getenv('DATABASE_NAME', 'postgres')
+_db_user = os.getenv('DATABASE_USER', '')
+_db_password = os.getenv('DATABASE_PASSWORD', '')
+_db_host = os.getenv('DATABASE_HOST', '')
+_db_port = os.getenv('DATABASE_PORT', '5432')
+
+if _db_host and _db_user and _db_password:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': _db_name,
+            'USER': _db_user,
+            'PASSWORD': _db_password,
+            'HOST': _db_host,
+            'PORT': _db_port,
+            'CONN_MAX_AGE': 0,
+            'OPTIONS': {'sslmode': 'require'},
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

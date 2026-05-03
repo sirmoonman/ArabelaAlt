@@ -116,7 +116,7 @@
   <!-- Gallery Section -->
   <div class="lg:col-span-7 flex flex-col gap-4">
     <div class="relative overflow-hidden bg-white aspect-[3/4] border-none shadow-none">
-      <img alt="{{ product.title }}" class="w-full h-full object-cover" src="{{ product.image }}" />
+      <img id="product-main-image" alt="{{ product.title }}" class="w-full h-full object-cover" src="{{ product.image }}" />
       {% if product.availability %}
       <div class="absolute top-8 left-0 py-2 px-4 bg-secondary-container text-on-secondary-container rounded-r-full font-label text-[0.625rem] tracking-widest uppercase font-bold">
         {{ product.availability }}
@@ -128,10 +128,10 @@
   <!-- Booking & Info Section -->
   <div class="lg:col-span-5 flex flex-col gap-10 sticky top-28 h-fit">
     <div class="space-y-2">
-      <span class="font-label text-[0.6875rem] tracking-[0.2rem] uppercase text-secondary">{{ product.collection }}</span>
-      <h2 class="font-headline text-4xl lg:text-5xl font-bold tracking-tighter leading-none">{{ product.title }}</h2>
+      <span id="product-collection-label" class="font-label text-[0.6875rem] tracking-[0.2rem] uppercase text-secondary">{{ product.collection }}</span>
+      <h2 id="product-title" class="font-headline text-4xl lg:text-5xl font-bold tracking-tighter leading-none">{{ product.title }}</h2>
       <div class="flex items-baseline gap-2 pt-2">
-        <span class="font-headline text-2xl">{{ product.price }}</span>
+        <span id="product-price" class="font-headline text-2xl">{{ product.price }}</span>
         <span class="font-label text-[0.6875rem] tracking-widest text-secondary uppercase">/ Day</span>
       </div>
     </div>
@@ -155,9 +155,9 @@
         <button type="button" class="font-label text-[0.625rem] tracking-widest uppercase underline underline-offset-4 decoration-outline-variant">Size Guide</button>
       </div>
       <div class="flex gap-3">
-        <button type="button" class="w-12 h-12 flex items-center justify-center border border-on-surface text-on-surface font-body text-sm hover:bg-on-surface hover:text-white transition-all">S</button>
-        <button type="button" class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface font-body text-sm hover:border-on-surface transition-all">M</button>
-        <button type="button" class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface font-body text-sm hover:border-on-surface transition-all">L</button>
+        <button type="button" data-product-size="S" aria-pressed="false" class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface font-body text-sm hover:bg-on-surface hover:text-white hover:border-on-surface transition-all">S</button>
+        <button type="button" data-product-size="M" aria-pressed="false" class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface font-body text-sm hover:bg-on-surface hover:text-white hover:border-on-surface transition-all">M</button>
+        <button type="button" data-product-size="L" aria-pressed="false" class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface font-body text-sm hover:bg-on-surface hover:text-white hover:border-on-surface transition-all">L</button>
         <button type="button" class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface/30 font-body text-sm cursor-not-allowed" aria-disabled="true">XL</button>
       </div>
     </div>
@@ -222,7 +222,7 @@
     <h3 class="font-headline text-3xl font-bold tracking-[0.3em] uppercase">You May Also Like</h3>
   </div>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
-    <a href="{% url 'gowns:product_detail' slug='valencia-lace' %}" class="group cursor-pointer block">
+    <a href="{% url 'gowns:product_detail' collection=collection slug='valencia-lace' %}" class="group cursor-pointer block">
       <div class="relative bg-transparent aspect-[3/5] mb-6 overflow-hidden flex items-center justify-center shadow-none">
         <img alt="Wedding One" class="w-full h-full transition-transform duration-700 group-hover:scale-105 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
       </div>
@@ -231,7 +231,7 @@
         <p class="text-[0.9rem] font-body font-medium text-on-surface">₱1,600</p>
       </div>
     </a>
-    <a href="{% url 'gowns:product_detail' slug='archive-satin' %}" class="group cursor-pointer block">
+    <a href="{% url 'gowns:product_detail' collection=collection slug='archive-satin' %}" class="group cursor-pointer block">
       <div class="relative bg-transparent aspect-[3/5] mb-6 overflow-hidden flex items-center justify-center shadow-none">
         <img alt="Wedding Two" class="w-full h-full transition-transform duration-700 group-hover:scale-105 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
       </div>
@@ -240,7 +240,7 @@
         <p class="text-[0.9rem] font-body font-medium text-on-surface">₱1,800</p>
       </div>
     </a>
-    <a href="{% url 'gowns:product_detail' slug='florence-organza' %}" class="group cursor-pointer block">
+    <a href="{% url 'gowns:product_detail' collection=collection slug='florence-organza' %}" class="group cursor-pointer block">
       <div class="relative bg-transparent aspect-[3/5] mb-6 overflow-hidden flex items-center justify-center shadow-none">
         <img alt="Wedding Three" class="w-full h-full transition-transform duration-700 group-hover:scale-105 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
       </div>
@@ -249,7 +249,7 @@
         <p class="text-[0.9rem] font-body font-medium text-on-surface">₱2,000</p>
       </div>
     </a>
-    <a href="{% url 'gowns:product_detail' slug='opulence-pearl' %}" class="group cursor-pointer block">
+    <a href="{% url 'gowns:product_detail' collection=collection slug='opulence-pearl' %}" class="group cursor-pointer block">
       <div class="relative bg-transparent aspect-[3/5] mb-6 overflow-hidden flex items-center justify-center shadow-none">
         <img alt="Wedding Five" class="w-full h-full transition-transform duration-700 group-hover:scale-105 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
       </div>
@@ -353,6 +353,15 @@
     const prevBtn = document.getElementById('product-cal-prev');
     const nextBtn = document.getElementById('product-cal-next');
     const bookNowBtn = document.getElementById('product-book-now');
+    const sizeButtons = Array.from(document.querySelectorAll('[data-product-size]'));
+    const productTitleEl = document.getElementById('product-title');
+    const productPriceEl = document.getElementById('product-price');
+    const productImageEl = document.getElementById('product-main-image');
+    const productCollectionEl = document.getElementById('product-collection-label');
+    const qs = new URLSearchParams(window.location.search);
+    const requestedCartIndex = qs.has('cart_item_index') ? Number(qs.get('cart_item_index')) : NaN;
+    const PAGE_COLLECTION = '{{ collection|escapejs }}';
+    let cartContextItem = null;
 
     if (!titleEl || !gridEl || !rangeEl || !datesWrapEl || !startDateEl || !returnDateEl || !prevBtn || !nextBtn) return;
 
@@ -361,6 +370,52 @@
 
     let viewYear = today.getFullYear();
     let viewMonth = today.getMonth();
+    let selectedSize = '-';
+
+    function updateSizeButtonState() {
+      sizeButtons.forEach(function (btn) {
+        const isSelected = (btn.dataset.productSize || '-') === selectedSize;
+        btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+        btn.classList.toggle('border-on-surface', isSelected);
+        btn.classList.toggle('bg-on-surface', isSelected);
+        btn.classList.toggle('text-white', isSelected);
+        btn.classList.toggle('border-outline-variant/30', !isSelected);
+        btn.classList.toggle('text-on-surface', !isSelected);
+      });
+    }
+
+    if (sizeButtons.length) {
+      sizeButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          selectedSize = btn.dataset.productSize || '-';
+          updateSizeButtonState();
+        });
+      });
+      updateSizeButtonState();
+    }
+
+    if (Number.isInteger(requestedCartIndex) && requestedCartIndex >= 0) {
+      try {
+        const cart = JSON.parse(localStorage.getItem('arabela_cart') || '[]');
+        const existing = cart[requestedCartIndex];
+        if (existing && typeof existing === 'object') {
+          cartContextItem = existing;
+          if (productTitleEl && existing.name) productTitleEl.textContent = String(existing.name);
+          if (productPriceEl) {
+            const n = Number(existing.price) || 0;
+            productPriceEl.textContent = '₱' + n.toLocaleString('en-PH');
+          }
+          if (productImageEl && existing.img) {
+            productImageEl.src = String(existing.img);
+            productImageEl.alt = String(existing.name || 'Product image');
+          }
+          if (productCollectionEl && existing.name) {
+            const firstWord = String(existing.name).trim().split(/\s+/)[0] || '';
+            if (firstWord) productCollectionEl.textContent = firstWord;
+          }
+        }
+      } catch (err) {}
+    }
 
     // Fixed-offset snap selection: always a 5-day block centered on the clicked date
     let center = null;
@@ -536,6 +591,11 @@
     setRangeText();
     render();
 
+    if (cartContextItem && typeof cartContextItem.size === 'string' && cartContextItem.size.trim() && cartContextItem.size !== '-') {
+      selectedSize = cartContextItem.size.trim().toUpperCase();
+      updateSizeButtonState();
+    }
+
     if (bookNowBtn) {
       bookNowBtn.addEventListener('click', function () {
         if (!center) {
@@ -543,15 +603,25 @@
           return;
         }
 
+        if (!selectedSize || selectedSize === '-') {
+          window.alert('Please select a size first.');
+          return;
+        }
+
         const startDate = new Date(center.getFullYear(), center.getMonth(), center.getDate() - 2);
         const returnDate = new Date(center.getFullYear(), center.getMonth(), center.getDate() + 2);
+        const resolvedId = cartContextItem && cartContextItem.id ? cartContextItem.id : '{{ slug|escapejs }}';
+        const resolvedName = cartContextItem && cartContextItem.name ? cartContextItem.name : '{{ product.title|escapejs }}';
+        const resolvedColl =
+          (cartContextItem && cartContextItem.collection) ? cartContextItem.collection : PAGE_COLLECTION;
         const item = {
-          id: '{{ slug|escapejs }}',
-          name: '{{ product.title|escapejs }}',
-          price: parsePesoToNumber('{{ product.price|escapejs }}'),
+          id: resolvedId,
+          name: resolvedName,
+          collection: resolvedColl || 'wedding',
+          price: cartContextItem && Number(cartContextItem.price) ? Number(cartContextItem.price) : parsePesoToNumber('{{ product.price|escapejs }}'),
           qty: 1,
-          size: '-',
-          img: '{{ product.image|escapejs }}',
+          size: selectedSize,
+          img: cartContextItem && cartContextItem.img ? cartContextItem.img : '{{ product.image|escapejs }}',
           rental: fmtMDY(startDate) + ' - ' + fmtMDY(returnDate),
           rentalStart: fmtMDY(startDate),
           rentalReturn: fmtMDY(returnDate),
@@ -564,7 +634,50 @@
         } catch (err) {
           cart = [];
         }
-        cart.push(item);
+
+        const hasRequestedCartIndex =
+          Number.isInteger(requestedCartIndex) && requestedCartIndex >= 0 && requestedCartIndex < cart.length;
+
+        function rowCollection(e) {
+          return String((e && e.collection) ? e.collection : 'wedding').trim();
+        }
+
+        function isStubRow(e) {
+          if (!e || String(e.id) !== String(resolvedId)) return false;
+          if ((e.name || '') !== (resolvedName || '')) return false;
+          if (rowCollection(e) !== rowCollection(item)) return false;
+          const noRent = !e.rental || String(e.rental).trim() === '' || e.rental === '-';
+          const noSize = !e.size || e.size === '-' || String(e.size).trim() === '';
+          return noRent && noSize;
+        }
+
+        if (hasRequestedCartIndex) {
+          const current = cart[requestedCartIndex] || {};
+          const prevQty = Number(current.qty) > 0 ? Number(current.qty) : 1;
+          const resolvedSize = item.size !== '-' ? item.size : (current.size || '-');
+          cart[requestedCartIndex] = {
+            ...current,
+            ...item,
+            size: resolvedSize,
+            collection: resolvedColl || rowCollection(current) || 'wedding',
+            qty: prevQty
+          };
+        } else {
+          const stubIdx = cart.findIndex(isStubRow);
+          if (stubIdx >= 0) {
+            const current = cart[stubIdx] || {};
+            const prevQty = Number(current.qty) > 0 ? Number(current.qty) : 1;
+            cart[stubIdx] = {
+              ...current,
+              ...item,
+              size: item.size !== '-' ? item.size : (current.size || '-'),
+              collection: resolvedColl || rowCollection(current) || 'wedding',
+              qty: prevQty
+            };
+          } else {
+            cart.push(item);
+          }
+        }
         localStorage.setItem('arabela_cart', JSON.stringify(cart));
         localStorage.setItem('arabela_book_now_context', JSON.stringify(item));
         window.location.href = "{% url 'gowns:selection' %}?source=book-now";

@@ -72,6 +72,12 @@ const DEPOSIT_PER_ITEM = 2000;
 function formatPeso(amount) {
   return '₱ ' + amount.toLocaleString();
 }
+function getProductDetailUrl(item, idx) {
+  const slug = item && item.id ? String(item.id).trim() : '';
+  if (!slug) return '#';
+  const col = item && item.collection ? String(item.collection).trim() : 'wedding';
+  return `/collections/${encodeURIComponent(col)}/products/${encodeURIComponent(slug)}/?cart_item_index=${idx}`;
+}
 function renderCart() {
   const cart = JSON.parse(localStorage.getItem('arabela_cart') || '[]');
   const cartItemsDiv = document.getElementById('cart-items');
@@ -97,14 +103,14 @@ function renderCart() {
     cartItemsDiv.innerHTML += `
     <div class="grid grid-cols-12 items-center gap-4 mb-6">
       <div class="col-span-6 flex gap-8 items-center">
-        <div class="w-32 aspect-[3/4] bg-surface-container-low overflow-hidden">
+        <a href="${getProductDetailUrl(item, idx)}" class="w-32 aspect-[3/4] bg-surface-container-low overflow-hidden block">
           <img alt="${item.name}" class="w-full h-full object-cover" src="${item.img}"/>
-        </div>
+        </a>
         <div class="flex flex-col justify-center gap-2">
           <h3 class="font-headline font-bold text-lg tracking-tight uppercase">${item.name}</h3>
           <div class="flex flex-col gap-1">
-            <p class="text-[0.75rem] text-secondary tracking-widest uppercase">Size: ${item.size || '-'}</p>
-            <p class="text-[0.75rem] text-secondary tracking-widest uppercase">Rental: ${item.rental || '-'}</p>
+            ${item.size && item.size !== '-' ? `<p class="text-[0.75rem] text-secondary tracking-widest uppercase">Size: ${item.size}</p>` : ''}
+            ${item.rental && item.rental !== '-' ? `<p class="text-[0.75rem] text-secondary tracking-widest uppercase">Rental: ${item.rental}</p>` : ''}
           </div>
           <button class="text-[0.625rem] tracking-widest uppercase underline underline-offset-4 text-on-surface-variant mt-2 hover:text-primary transition-colors text-left" onclick="removeCartItem(${idx})">Remove</button>
         </div>

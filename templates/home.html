@@ -394,7 +394,7 @@
     </header>
     <div class="flex-1 overflow-y-auto ai-scroll px-8 py-4 space-y-10 min-h-0">
         <div class="cart-line flex gap-4 group" data-unit-price="4500">
-            <div class="w-24 h-32 bg-white border border-black/10 overflow-hidden shrink-0">
+            <div class="w-24 h-32 bg-white overflow-hidden shrink-0">
                 <img alt="Structured Wool Blazer" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
             </div>
             <div class="flex-1 flex flex-col justify-between py-1 min-w-0">
@@ -422,7 +422,7 @@
             </div>
         </div>
         <div class="cart-line flex gap-4 group" data-unit-price="6200">
-            <div class="w-24 h-32 bg-white border border-black/10 overflow-hidden shrink-0">
+            <div class="w-24 h-32 bg-white overflow-hidden shrink-0">
                 <img alt="Emerald Silk Midi Dress" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
             </div>
             <div class="flex-1 flex flex-col justify-between py-1 min-w-0">
@@ -750,6 +750,13 @@
         return document.querySelector('#cart-drawer .flex-1.overflow-y-auto');
     }
 
+    function getProductDetailUrl(item, index) {
+        const slug = item && item.id ? String(item.id).trim() : '';
+        if (!slug) return '';
+        const col = item && item.collection ? String(item.collection).trim() : 'wedding';
+        return `/collections/${encodeURIComponent(col)}/products/${encodeURIComponent(slug)}/?cart_item_index=${index}`;
+    }
+
     function renderCartDrawer() {
         const lines = getCartLinesContainer();
         if (!lines) return;
@@ -766,14 +773,15 @@
             const lineTotal = unitPrice * qty;
             return `
                 <div class="cart-line flex gap-4 group" data-index="${index}" data-unit-price="${unitPrice}" data-rental="${item.rental || ''}">
-                    <div class="w-24 h-32 bg-white border border-black/10 overflow-hidden shrink-0">
-                        <img alt="${item.name || 'Selection item'}" class="w-full h-full object-cover" src="${item.img || ''}"/>
-                    </div>
+                    <a href="${getProductDetailUrl(item, index)}" class="w-24 h-32 bg-white overflow-hidden shrink-0 block">
+                        <img alt="${item.name || 'Selection item'}" class="w-full h-full object-cover" style="clip-path: inset(1px 0 0 1px);" src="${item.img || ''}"/>
+                    </a>
                     <div class="flex-1 flex flex-col justify-between py-1 min-w-0">
                         <div class="flex justify-between items-start gap-2">
                             <div>
                                 <h3 class="text-sm font-medium text-on-surface leading-tight">${item.name || 'Untitled'}</h3>
-                                <p class="text-[0.6875rem] text-on-secondary-container mt-1">Size: ${item.size || '-'}</p>
+                                ${item.size && item.size !== '-' ? `<p class="text-[0.6875rem] text-on-secondary-container mt-1">Size: ${item.size}</p>` : ''}
+                                ${item.rental && item.rental !== '-' ? `<p class="text-[0.6875rem] text-on-secondary-container mt-1">Rental: ${item.rental}</p>` : ''}
                             </div>
                             <button type="button" class="text-on-surface hover:text-error transition-colors shrink-0" onclick="cartRemoveLine(this)" aria-label="Remove item">
                                 <span class="material-symbols-outlined text-lg">close</span>

@@ -20,6 +20,7 @@
     .reservation-field-invalid input { border-bottom-color: #ba1a1a !important; }
     .reservation-field-invalid label { color: #ba1a1a !important; }
     #proof-payment-dropzone.reservation-proof-invalid { border-color: #ba1a1a !important; background-color: rgba(186, 26, 26, 0.06); }
+    .reservation-error-text { margin-top: 0.375rem; font-size: 0.875rem; line-height: 1.4; color: #ba1a1a; letter-spacing: 0.01em; text-transform: none; }
     #loading-overlay { display: none; position: fixed; inset: 0; z-index: 999999; background-color: #ffffff; }
     #loading-overlay.show { display: flex; align-items: center; justify-content: center; }
     .loading-spinner { width: 64px; height: 64px; border: 4px solid #e5e2e1; border-top-color: #0b0c0c; border-radius: 50%; }
@@ -55,7 +56,7 @@
 </div>
 <div class="relative md:col-span-2">
 <input class="peer w-full bg-transparent border-0 border-b border-outline-variant/30 py-2 px-0 focus:ring-0 placeholder-transparent" id="address" placeholder=" " type="text">
-<label class="absolute left-0 -top-4 text-[0.6875rem] uppercase tracking-widest text-secondary transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-outline peer-focus:-top-4 peer-focus:text-[0.6875rem] peer-focus:text-primary" for="address">Street Address</label>
+<label class="absolute left-0 -top-4 text-[0.6875rem] uppercase tracking-widest text-secondary transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-outline peer-focus:-top-4 peer-focus:text-[0.6875rem] peer-focus:text-primary" for="address">Address</label>
 </div>
 <div class="relative">
 <input class="peer w-full bg-transparent border-0 border-b border-outline-variant/30 py-2 px-0 focus:ring-0 placeholder-transparent" id="city" placeholder=" " type="text">
@@ -227,6 +228,34 @@
             });
             var proof = document.getElementById('proof-payment-dropzone');
             if (proof) proof.classList.remove('reservation-proof-invalid', 'animate-reservation-invalid-shake');
+            document.querySelectorAll('.reservation-error-text').forEach(function (el) {
+                el.remove();
+            });
+        }
+
+        function setFieldError(wrap, message) {
+            if (!wrap) return;
+            wrap.classList.add('reservation-field-invalid');
+            var oldError = wrap.querySelector('.reservation-error-text');
+            if (oldError) oldError.remove();
+            var errorEl = document.createElement('p');
+            errorEl.className = 'reservation-error-text';
+            errorEl.textContent = message;
+            wrap.appendChild(errorEl);
+        }
+
+        function setProofError(message) {
+            var proofZone = document.getElementById('proof-payment-dropzone');
+            if (!proofZone) return;
+            proofZone.classList.add('reservation-proof-invalid');
+            var host = proofZone.parentElement;
+            if (!host) return;
+            var oldError = host.querySelector('.reservation-error-text');
+            if (oldError) oldError.remove();
+            var errorEl = document.createElement('p');
+            errorEl.className = 'reservation-error-text';
+            errorEl.textContent = message;
+            host.appendChild(errorEl);
         }
 
         function triggerReservationInvalidShake(el) {
@@ -248,12 +277,25 @@
                 var wrap = input.closest('.relative');
                 if (!input.value.trim()) {
                     if (wrap) {
-                        wrap.classList.add('reservation-field-invalid');
+                        setFieldError(wrap, 'This field is required.');
                         invalidEls.push(wrap);
                         if (!firstInvalid) firstInvalid = wrap;
                     }
                 }
             });
+
+            var postalInput = document.getElementById('postal');
+            if (postalInput) {
+                var postalVal = postalInput.value.trim();
+                if (postalVal.length > 0 && !/^\d{4}$/.test(postalVal)) {
+                    var postalWrap = postalInput.closest('.relative');
+                    if (postalWrap) {
+                        setFieldError(postalWrap, 'Zip is not valid.');
+                        invalidEls.push(postalWrap);
+                        if (!firstInvalid) firstInvalid = postalWrap;
+                    }
+                }
+            }
 
             var phoneInput = document.getElementById('phone');
             if (phoneInput) {
@@ -261,7 +303,7 @@
                 if (phoneVal.length > 0 && (!/^\d+$/.test(phoneVal) || phoneVal.length !== 11)) {
                     var phoneWrap = phoneInput.closest('.relative');
                     if (phoneWrap) {
-                        phoneWrap.classList.add('reservation-field-invalid');
+                        setFieldError(phoneWrap, 'Invalid number.');
                         invalidEls.push(phoneWrap);
                         if (!firstInvalid) firstInvalid = phoneWrap;
                     }
@@ -271,7 +313,7 @@
             var fileInput = document.getElementById('proof_of_payment');
             var proofZone = document.getElementById('proof-payment-dropzone');
             if (fileInput && proofZone && (!fileInput.files || fileInput.files.length === 0)) {
-                proofZone.classList.add('reservation-proof-invalid');
+                setProofError('Please upload proof of payment.');
                 invalidEls.push(proofZone);
                 if (!firstInvalid) firstInvalid = proofZone;
             }

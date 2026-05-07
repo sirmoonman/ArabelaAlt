@@ -73,6 +73,8 @@ def collection_suit(request):
 def legacy_wedding_product_url(request, slug: str):
     """Old path /collections/wedding/products/<slug>/ — redirect to routed product URL."""
     target = reverse("gowns:product_detail", kwargs={"collection": "wedding", "slug": slug})
+    if request.path == target:
+        return product_detail(request, "wedding", slug)
     if request.GET:
         target += "?" + request.GET.urlencode()
     return redirect(target)

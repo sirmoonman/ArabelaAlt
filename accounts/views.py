@@ -2,12 +2,15 @@ from django.conf import settings
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from smtplib import SMTPException
+import random
 import re
 from allauth.account.models import EmailAddress
+from .models import UserProfile
 
 
 User = get_user_model()
@@ -22,6 +25,22 @@ def _build_unique_username(email: str) -> str:
         username = f'{base[:110]}{index}'
         index += 1
     return username
+
+
+def _generate_verification_code() -> str:
+    return f"{random.randint(0, 999999):06d}"
+
+
+def _send_verification_code(request, email: str, code: str) -> None:
+    subject = 'Arabela Email Verification Code'
+    message = (
+        f'Hello,\n\nYour Arabela verification code is {code}.\n\n'
+        'This code will expire in 5 minutes.\n\n'
+        'Enter this 6-digit code on the verification page to activate your account.\n\n'
+        'If you did not request this, please ignore this email.\n'
+    )
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', settings.EMAIL_HOST_USER) or 'no-reply@arabela.com'
+    send_mail(subject, message, from_email, [email], fail_silently=False)
 
 
 def login_view(request):
@@ -143,7 +162,35 @@ def signup_view(request):
                 },
             )
 
-        if User.objects.filter(email__iexact=email).exists():
+        existing_user = User.objects.filter(email__iexact=email).first()
+        if existing_user:
+            is_verified = EmailAddress.objects.filter(user=existing_user, email__iexact=email, verified=True).exists()
+            if not is_verified:
+                profile, _ = UserProfile.objects.get_or_create(user=existing_user)
+                if not profile.display_name:
+                    display_name = " ".join(part for part in [first_name, last_name] if part).strip()
+                    if display_name:
+                        profile.display_name = display_name
+                        profile.save(update_fields=["display_name"])
+
+                request.session['pending_verification_email'] = email
+                verification_code = _generate_verification_code()
+                request.session['verification_code'] = verification_code
+                try:
+                    _send_verification_code(request, email, verification_code)
+                except SMTPException:
+                    return render(
+                        request,
+                        'signup.html',
+                        {
+                            'error': 'We could not send the verification email. Please check your Gmail SMTP settings and try again.',
+                            'first_name': first_name,
+                            'last_name': last_name,
+                            'email': email,
+                        },
+                    )
+                return redirect(f"{reverse('accounts:verify_email_pending')}?email={email}&resent=1")
+
             return render(
                 request,
                 'signup.html',
@@ -165,8 +212,13 @@ def signup_view(request):
         )
 
         email_address = EmailAddress.objects.create(user=user, email=email, primary=True, verified=False)
+        UserProfile.objects.create(user=user, display_name=f"{first_name} {last_name}".strip())
+        verification_code = _generate_verification_code()
+        request.session['pending_verification_email'] = email
+        request.session['verification_code'] = verification_code
+
         try:
-            email_address.send_confirmation(request, signup=True)
+            _send_verification_code(request, email, verification_code)
         except SMTPException:
             user.delete()
             return render(
@@ -179,7 +231,7 @@ def signup_view(request):
                     'email': email,
                 },
             )
-        request.session['pending_verification_email'] = email
+
         return redirect('accounts:verify_email_pending')
 
     return render(request, 'signup.html', {})
@@ -194,7 +246,7 @@ def verify_email_pending_view(request):
         'email': email,
         'resent': request.GET.get('resent') == '1',
     }
-    return render(request, 'verify_email_pending.html', context)
+    return render(request, 'verification.html', context)
 
 
 def resend_verification_email_view(request):
@@ -209,17 +261,59 @@ def resend_verification_email_view(request):
     if not user:
         return redirect('accounts:signup')
 
-    email_address, _ = EmailAddress.objects.get_or_create(
+    verification_code = _generate_verification_code()
+    request.session['pending_verification_email'] = email
+    request.session['verification_code'] = verification_code
+
+    try:
+        _send_verification_code(request, email, verification_code)
+    except SMTPException:
+        return render(request, 'verification.html', {'error': 'Unable to resend the verification code. Please try again later.', 'email': email})
+
+    return redirect(f"{reverse('accounts:verify_email_pending')}?email={email}&resent=1")
+
+
+def verify_email_code_view(request):
+    if request.method != 'POST':
+        return redirect('accounts:verify_email_pending')
+
+    email = (request.session.get('pending_verification_email') or '').strip().lower()
+    code = request.POST.get('code', '').strip()
+
+    if not email:
+        return redirect('accounts:signup')
+
+    if not code:
+        return render(request, 'verification.html', {'error': 'Please enter the 6-digit verification code.', 'email': email})
+
+    if code != request.session.get('verification_code'):
+        return render(request, 'verification.html', {'error': 'The code you entered is invalid. Please try again.', 'email': email})
+
+    user = User.objects.filter(email__iexact=email).first()
+    if not user:
+        return redirect('accounts:signup')
+
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    if not profile.display_name:
+        display_name = " ".join(part for part in [user.first_name, user.last_name] if part).strip()
+        if display_name:
+            profile.display_name = display_name
+            profile.save(update_fields=["display_name"])
+
+    email_address, created = EmailAddress.objects.get_or_create(
         user=user,
         email=email,
-        defaults={'primary': True, 'verified': False},
+        defaults={'primary': True, 'verified': True},
     )
-
     if not email_address.verified:
-        email_address.send_confirmation(request, signup=False)
+        email_address.verified = True
+        email_address.primary = True
+        email_address.save()
 
-    request.session['pending_verification_email'] = email
-    return redirect(f"{reverse('accounts:verify_email_pending')}?email={email}&resent=1")
+    request.session.pop('verification_code', None)
+    request.session.pop('pending_verification_email', None)
+    request.session['auth_notice'] = 'Your email has been verified. Please sign in.'
+    return redirect('accounts:login')
 
 
 def logout_view(request):

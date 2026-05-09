@@ -66,32 +66,72 @@
         transform: translateY(0) scale(1);
         opacity: 1;
       }
+      .edit-input {
+        border-color: #d1d5db !important;
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        font-size: 0.95rem !important;
+        line-height: 1.25rem !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+      }
+      .edit-input::placeholder {
+        color: #94a3b8 !important;
+      }
       .edit-input:focus {
         outline: none !important;
-        border-color: #222222 !important;
-        box-shadow: 0 0 0 1px #222222 !important;
+        border-color: #bfdbfe !important;
+        background-color: #f8fbff !important;
+        box-shadow: 0 0 0 3px rgba(191, 219, 254, 0.55), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
       }
-      .region-menu {
-        max-height: 220px;
-        overflow-y: auto;
+      @keyframes field-error-fade {
+        from {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-      .region-menu::-webkit-scrollbar {
-        width: 6px;
+      @keyframes invalid-shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
       }
-      .region-menu::-webkit-scrollbar-thumb {
-        background: #d1d5db;
-        border-radius: 9999px;
+      .field-error-text {
+        color: #ba1a1a;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.2;
       }
-      .region-option {
-        width: 100%;
-        text-align: left;
-        padding: 0.55rem 0.75rem;
-        font-size: 1rem;
-        color: #1b1c1c;
-        transition: background-color 0.15s ease;
+      .field-error-animate {
+        animation: field-error-fade 0.22s ease forwards;
       }
-      .region-option:hover {
-        background: #f3f4f6;
+      .edit-input-error {
+        border-color: #ba1a1a !important;
+        box-shadow: 0 0 0 1px #ba1a1a !important;
+      }
+      .input-invalid-shake {
+        animation: invalid-shake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+      }
+      @keyframes address-card-enter {
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .address-card-enter {
+        animation: address-card-enter 280ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .address-skeleton {
+        background: linear-gradient(90deg, #f4f4f5 25%, #ececec 37%, #f4f4f5 63%);
+        background-size: 200% 100%;
+        animation: shimmer 1.1s infinite linear;
       }
       select.edit-input {
         appearance: none;
@@ -138,12 +178,18 @@
           <form class="px-5 pb-5" id="edit-profile-form" method="post" action="{% url 'gowns:profile' %}">
             {% csrf_token %}
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <input class="edit-input h-11 rounded-lg border border-gray-200 px-3 text-base text-[#1b1c1c] placeholder:text-gray-400 focus:outline-none" type="text" name="first_name" placeholder="First name" value="{{ profile_first_name }}" />
-              <input class="edit-input h-11 rounded-lg border border-gray-200 px-3 text-base text-[#1b1c1c] placeholder:text-gray-400 focus:outline-none" type="text" name="last_name" placeholder="Last name" value="{{ profile_last_name }}" />
+              <div>
+                <input class="edit-input h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="profile-first-name-input" type="text" name="first_name" placeholder="First name" value="{{ profile_first_name }}" />
+                <p class="hidden field-error-text mt-1" id="profile-first-name-error"></p>
+              </div>
+              <div>
+                <input class="edit-input h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="profile-last-name-input" type="text" name="last_name" placeholder="Last name" value="{{ profile_last_name }}" />
+                <p class="hidden field-error-text mt-1" id="profile-last-name-error"></p>
+              </div>
             </div>
             <div class="mt-6 flex items-center justify-end gap-3">
               <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-base font-semibold text-[#222222] transition-colors hover:bg-gray-50" id="cancel-edit-profile-btn" type="button">Cancel</button>
-              <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-base font-semibold text-[#222222] transition-colors hover:bg-gray-50" type="submit">Save</button>
+              <button class="rounded-lg border border-[#0b0c0c] bg-[#0b0c0c] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#222222]" type="submit">Save</button>
             </div>
           </form>
         </div>
@@ -162,109 +208,26 @@
             </button>
           </div>
           <form class="space-y-3">
-            <input class="edit-input h-11 w-full rounded-lg border border-gray-200 px-3 text-base text-[#1b1c1c] placeholder:text-gray-500 focus:outline-none" type="text" placeholder="Address" />
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <input class="edit-input h-11 w-full rounded-lg border border-gray-200 px-3 text-base text-[#1b1c1c] placeholder:text-gray-500 focus:outline-none" type="text" placeholder="Postal code" />
-              <input class="edit-input h-11 w-full rounded-lg border border-gray-200 px-3 text-base text-[#1b1c1c] placeholder:text-gray-500 focus:outline-none" type="text" placeholder="City" />
+            <div>
+              <input class="edit-input h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="address-line-input" type="text" placeholder="Address" />
+              <p class="hidden field-error-text mt-1" id="address-line-error"></p>
             </div>
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div class="relative">
-                <input class="edit-input h-11 w-full rounded-lg border border-gray-200 px-3 pr-9 text-base text-[#1b1c1c] placeholder:text-gray-500 focus:outline-none bg-white cursor-pointer" type="text" placeholder="Region" id="region-input" readonly />
-                <button type="button" id="toggle-region-menu-btn" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#222222]">
-                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                  </svg>
-                </button>
-                <div id="region-menu" class="region-menu absolute left-0 right-0 z-[120] mt-1 hidden rounded-lg border border-gray-200 bg-white shadow-lg">
-                  <button type="button" class="region-option">Abra</button>
-                  <button type="button" class="region-option">Agusan del Norte</button>
-                  <button type="button" class="region-option">Agusan del Sur</button>
-                  <button type="button" class="region-option">Aklan</button>
-                  <button type="button" class="region-option">Albay</button>
-                  <button type="button" class="region-option">Antique</button>
-                  <button type="button" class="region-option">Apayao</button>
-                  <button type="button" class="region-option">Aurora</button>
-                  <button type="button" class="region-option">Basilan</button>
-                  <button type="button" class="region-option">Bataan</button>
-                  <button type="button" class="region-option">Batanes</button>
-                  <button type="button" class="region-option">Batangas</button>
-                  <button type="button" class="region-option">Benguet</button>
-                  <button type="button" class="region-option">Biliran</button>
-                  <button type="button" class="region-option">Bohol</button>
-                  <button type="button" class="region-option">Bukidnon</button>
-                  <button type="button" class="region-option">Bulacan</button>
-                  <button type="button" class="region-option">Cagayan</button>
-                  <button type="button" class="region-option">Camarines Norte</button>
-                  <button type="button" class="region-option">Camarines Sur</button>
-                  <button type="button" class="region-option">Camiguin</button>
-                  <button type="button" class="region-option">Capiz</button>
-                  <button type="button" class="region-option">Catanduanes</button>
-                  <button type="button" class="region-option">Cavite</button>
-                  <button type="button" class="region-option">Cebu</button>
-                  <button type="button" class="region-option">Cotabato</button>
-                  <button type="button" class="region-option">Davao de Oro</button>
-                  <button type="button" class="region-option">Davao del Norte</button>
-                  <button type="button" class="region-option">Davao del Sur</button>
-                  <button type="button" class="region-option">Davao Occidental</button>
-                  <button type="button" class="region-option">Davao Oriental</button>
-                  <button type="button" class="region-option">Dinagat Islands</button>
-                  <button type="button" class="region-option">Eastern Samar</button>
-                  <button type="button" class="region-option">Guimaras</button>
-                  <button type="button" class="region-option">Ifugao</button>
-                  <button type="button" class="region-option">Ilocos Norte</button>
-                  <button type="button" class="region-option">Ilocos Sur</button>
-                  <button type="button" class="region-option">Iloilo</button>
-                  <button type="button" class="region-option">Isabela</button>
-                  <button type="button" class="region-option">Kalinga</button>
-                  <button type="button" class="region-option">La Union</button>
-                  <button type="button" class="region-option">Laguna</button>
-                  <button type="button" class="region-option">Lanao del Norte</button>
-                  <button type="button" class="region-option">Lanao del Sur</button>
-                  <button type="button" class="region-option">Leyte</button>
-                  <button type="button" class="region-option">Maguindanao del Norte</button>
-                  <button type="button" class="region-option">Maguindanao del Sur</button>
-                  <button type="button" class="region-option">Marinduque</button>
-                  <button type="button" class="region-option">Masbate</button>
-                  <button type="button" class="region-option">Metro Manila</button>
-                  <button type="button" class="region-option">Misamis Occidental</button>
-                  <button type="button" class="region-option">Misamis Oriental</button>
-                  <button type="button" class="region-option">Mountain Province</button>
-                  <button type="button" class="region-option">Negros Occidental</button>
-                  <button type="button" class="region-option">Negros Oriental</button>
-                  <button type="button" class="region-option">Northern Samar</button>
-                  <button type="button" class="region-option">Nueva Ecija</button>
-                  <button type="button" class="region-option">Nueva Vizcaya</button>
-                  <button type="button" class="region-option">Occidental Mindoro</button>
-                  <button type="button" class="region-option">Oriental Mindoro</button>
-                  <button type="button" class="region-option">Palawan</button>
-                  <button type="button" class="region-option">Pampanga</button>
-                  <button type="button" class="region-option">Pangasinan</button>
-                  <button type="button" class="region-option">Quezon</button>
-                  <button type="button" class="region-option">Quirino</button>
-                  <button type="button" class="region-option">Rizal</button>
-                  <button type="button" class="region-option">Romblon</button>
-                  <button type="button" class="region-option">Samar</button>
-                  <button type="button" class="region-option">Sarangani</button>
-                  <button type="button" class="region-option">Siquijor</button>
-                  <button type="button" class="region-option">Sorsogon</button>
-                  <button type="button" class="region-option">South Cotabato</button>
-                  <button type="button" class="region-option">Southern Leyte</button>
-                  <button type="button" class="region-option">Sultan Kudarat</button>
-                  <button type="button" class="region-option">Sulu</button>
-                  <button type="button" class="region-option">Surigao del Norte</button>
-                  <button type="button" class="region-option">Surigao del Sur</button>
-                  <button type="button" class="region-option">Tarlac</button>
-                  <button type="button" class="region-option">Tawi-Tawi</button>
-                  <button type="button" class="region-option">Zambales</button>
-                  <button type="button" class="region-option">Zamboanga del Norte</button>
-                  <button type="button" class="region-option">Zamboanga del Sur</button>
-                  <button type="button" class="region-option">Zamboanga Sibugay</button>
-                </div>
+              <div>
+                <input class="edit-input h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="postal-code-input" type="text" placeholder="Postal code" />
+                <p class="hidden field-error-text mt-1" id="postal-code-error"></p>
               </div>
-              <input class="edit-input h-11 w-full rounded-lg border border-gray-200 px-3 text-base text-[#1b1c1c] placeholder:text-gray-500 focus:outline-none" type="tel" placeholder="Phone (+63)" />
+              <div>
+                <input class="edit-input h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="city-input" type="text" placeholder="City" />
+                <p class="hidden field-error-text mt-1" id="city-error"></p>
+              </div>
+            </div>
+            <div>
+              <input class="edit-input h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="phone-input" type="tel" placeholder="Phone (+63)" />
+              <p class="hidden field-error-text mt-1" id="phone-error"></p>
             </div>
             <label class="flex items-center gap-3 pt-1 text-base text-[#1b1c1c]">
-              <input class="h-4 w-4 rounded border-gray-300 text-[#222222] focus:ring-[#222222]" type="checkbox" />
+              <input class="h-4 w-4 rounded border-gray-300 text-[#222222] focus:ring-[#222222]" id="default-address-input" type="checkbox" />
               <span>This is my default address</span>
             </label>
             <div class="flex items-center justify-end gap-3 pt-2">
@@ -317,7 +280,8 @@
           <h2 class="text-base font-semibold text-gray-900">Addresses</h2>
           <button class="text-custom-blue text-sm font-medium hover:underline" id="open-edit-address-btn" type="button">+ Add</button>
         </div>
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-3" data-purpose="empty-address-notice">
+        <div class="space-y-3" id="address-list"></div>
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-3" data-purpose="empty-address-notice" id="empty-address-notice">
           <div class="text-gray-400">
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
@@ -364,33 +328,131 @@
 
       const editProfileOpenBtn = document.getElementById("open-edit-profile-btn");
       const editProfileOverlay = document.getElementById("edit-profile-overlay");
+      const editProfileModal = document.getElementById("edit-profile-modal");
       const closeEditProfileBtn = document.getElementById("close-edit-profile-btn");
       const cancelEditProfileBtn = document.getElementById("cancel-edit-profile-btn");
       const editProfileForm = document.getElementById("edit-profile-form");
+      const profileFirstNameInput = document.getElementById("profile-first-name-input");
+      const profileLastNameInput = document.getElementById("profile-last-name-input");
+      const profileFirstNameError = document.getElementById("profile-first-name-error");
+      const profileLastNameError = document.getElementById("profile-last-name-error");
       const editAddressOpenBtn = document.getElementById("open-edit-address-btn");
       const editAddressOverlay = document.getElementById("edit-address-overlay");
+      const editAddressModal = document.getElementById("edit-address-modal");
       const closeEditAddressBtn = document.getElementById("close-edit-address-btn");
       const cancelEditAddressBtn = document.getElementById("cancel-edit-address-btn");
       const editAddressForm = document.querySelector("#edit-address-modal form");
-      const regionInput = document.getElementById("region-input");
-      const regionMenu = document.getElementById("region-menu");
-      const toggleRegionMenuBtn = document.getElementById("toggle-region-menu-btn");
+      const addressLineInput = document.getElementById("address-line-input");
+      const postalCodeInput = document.getElementById("postal-code-input");
+      const cityInput = document.getElementById("city-input");
+      const phoneInput = document.getElementById("phone-input");
+      const defaultAddressInput = document.getElementById("default-address-input");
+      const addressLineError = document.getElementById("address-line-error");
+      const postalCodeError = document.getElementById("postal-code-error");
+      const cityError = document.getElementById("city-error");
+      const phoneError = document.getElementById("phone-error");
+      const addressList = document.getElementById("address-list");
+      const emptyAddressNotice = document.getElementById("empty-address-notice");
+      const editAddressTitle = document.getElementById("edit-address-title");
+      const addressEntries = [];
+      const ADDRESS_STORAGE_KEY = "arabela_profile_addresses_v1";
+      let editingAddressIndex = null;
+      let saveAnimationTimeoutId = null;
+
+      function clearFieldError(inputEl, errorEl) {
+        if (inputEl) {
+          inputEl.classList.remove("edit-input-error", "input-invalid-shake");
+        }
+        if (errorEl) {
+          errorEl.textContent = "";
+          errorEl.classList.add("hidden");
+          errorEl.classList.remove("field-error-animate");
+        }
+      }
+
+      function showFieldError(inputEl, errorEl, message) {
+        if (inputEl) {
+          inputEl.classList.add("edit-input-error", "input-invalid-shake");
+          window.setTimeout(function () {
+            inputEl.classList.remove("input-invalid-shake");
+          }, 350);
+        }
+        if (errorEl) {
+          errorEl.textContent = message;
+          errorEl.classList.remove("hidden");
+          errorEl.classList.remove("field-error-animate");
+          void errorEl.offsetWidth;
+          errorEl.classList.add("field-error-animate");
+        }
+      }
+
+      function clearAddressErrors() {
+        clearFieldError(addressLineInput, addressLineError);
+        clearFieldError(postalCodeInput, postalCodeError);
+        clearFieldError(cityInput, cityError);
+        clearFieldError(phoneInput, phoneError);
+      }
+      function clearProfileErrors() {
+        clearFieldError(profileFirstNameInput, profileFirstNameError);
+        clearFieldError(profileLastNameInput, profileLastNameError);
+      }
+      function saveAddressEntries() {
+        try {
+          localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(addressEntries));
+        } catch (error) {
+          // Ignore storage quota/privacy mode issues.
+        }
+      }
+      function loadAddressEntries() {
+        try {
+          const raw = localStorage.getItem(ADDRESS_STORAGE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return [];
+          return parsed
+            .map(function (item) {
+              return {
+                addressLine: item && item.addressLine ? String(item.addressLine) : "",
+                postalCode: item && item.postalCode ? String(item.postalCode) : "",
+                city: item && item.city ? String(item.city) : "",
+                phone: item && item.phone ? String(item.phone) : "",
+                isDefault: !!(item && item.isDefault),
+              };
+            })
+            .filter(function (item) {
+              return item.addressLine || item.postalCode || item.city || item.phone;
+            });
+        } catch (error) {
+          return [];
+        }
+      }
 
       function openEditProfile() {
+        clearProfileErrors();
         document.body.classList.add("edit-profile-open");
       }
 
       function closeEditProfile() {
+        clearProfileErrors();
         document.body.classList.remove("edit-profile-open");
       }
-      function openEditAddress() {
+      function openEditAddress(mode) {
+        const isEditMode = mode === "edit";
+        clearAddressErrors();
+        if (!isEditMode) {
+          editingAddressIndex = null;
+          if (editAddressTitle) {
+            editAddressTitle.textContent = "Add address";
+          }
+          if (editAddressForm) {
+            editAddressForm.reset();
+          }
+        }
         document.body.classList.add("edit-address-open");
       }
       function closeEditAddress() {
         document.body.classList.remove("edit-address-open");
-        if (regionMenu) {
-          regionMenu.classList.add("hidden");
-        }
+        clearAddressErrors();
       }
 
       if (editProfileOpenBtn) {
@@ -402,9 +464,6 @@
       if (cancelEditProfileBtn) {
         cancelEditProfileBtn.addEventListener("click", closeEditProfile);
       }
-      if (editProfileOverlay) {
-        editProfileOverlay.addEventListener("click", closeEditProfile);
-      }
       if (editAddressOpenBtn) {
         editAddressOpenBtn.addEventListener("click", openEditAddress);
       }
@@ -414,40 +473,239 @@
       if (cancelEditAddressBtn) {
         cancelEditAddressBtn.addEventListener("click", closeEditAddress);
       }
-      if (editAddressOverlay) {
-        editAddressOverlay.addEventListener("click", closeEditAddress);
+      function bindBackdropCloseOnTrueClick(overlayEl, modalEl, closeFn) {
+        if (!overlayEl || !modalEl) return;
+        let pointerDownOutsideModal = false;
+
+        overlayEl.addEventListener("mousedown", function (event) {
+          pointerDownOutsideModal = !modalEl.contains(event.target);
+        });
+
+        overlayEl.addEventListener("mouseup", function (event) {
+          const pointerUpOutsideModal = !modalEl.contains(event.target);
+          if (pointerDownOutsideModal && pointerUpOutsideModal) {
+            closeFn();
+          }
+          pointerDownOutsideModal = false;
+        });
+      }
+
+      bindBackdropCloseOnTrueClick(editProfileOverlay, editProfileModal, closeEditProfile);
+      bindBackdropCloseOnTrueClick(editAddressOverlay, editAddressModal, closeEditAddress);
+      if (editProfileForm) {
+        editProfileForm.addEventListener("submit", function (event) {
+          clearProfileErrors();
+          const firstNameValue = profileFirstNameInput ? profileFirstNameInput.value.trim() : "";
+          const lastNameValue = profileLastNameInput ? profileLastNameInput.value.trim() : "";
+
+          if (!firstNameValue) {
+            event.preventDefault();
+            showFieldError(profileFirstNameInput, profileFirstNameError, "This field is required.");
+            return;
+          }
+          if (!lastNameValue) {
+            event.preventDefault();
+            showFieldError(profileLastNameInput, profileLastNameError, "This field is required.");
+          }
+        });
       }
       if (editAddressForm) {
         editAddressForm.addEventListener("submit", function (event) {
           event.preventDefault();
+          clearAddressErrors();
+          const entry = {
+            addressLine: addressLineInput ? addressLineInput.value.trim() : "",
+            postalCode: postalCodeInput ? postalCodeInput.value.trim() : "",
+            city: cityInput ? cityInput.value.trim() : "",
+            phone: phoneInput ? phoneInput.value.trim() : "",
+            isDefault: !!(defaultAddressInput && defaultAddressInput.checked),
+          };
+
+          if (!entry.addressLine) {
+            showFieldError(addressLineInput, addressLineError, "This field is required.");
+            return;
+          }
+          if (!entry.postalCode) {
+            showFieldError(postalCodeInput, postalCodeError, "This field is required.");
+            return;
+          }
+          if (!entry.city) {
+            showFieldError(cityInput, cityError, "This field is required.");
+            return;
+          }
+          if (!entry.phone) {
+            showFieldError(phoneInput, phoneError, "This field is required.");
+            return;
+          }
+
+          if (!/^\d{4}$/.test(entry.postalCode)) {
+            showFieldError(postalCodeInput, postalCodeError, "Zip code is not valid");
+            return;
+          }
+
+          if (!/^\d{11}$/.test(entry.phone)) {
+            showFieldError(phoneInput, phoneError, "Number invalid");
+            return;
+          }
+
+          if (entry.isDefault) {
+            addressEntries.forEach(function (item) {
+              item.isDefault = false;
+            });
+          }
+
+          if (editingAddressIndex !== null && addressEntries[editingAddressIndex]) {
+            addressEntries[editingAddressIndex] = entry;
+          } else {
+            addressEntries.push(entry);
+          }
+          saveAddressEntries();
+
+          renderAddressList({ showSkeleton: true });
+          editAddressForm.reset();
+          editingAddressIndex = null;
+          if (editAddressTitle) {
+            editAddressTitle.textContent = "Add address";
+          }
           closeEditAddress();
         });
       }
-      function toggleRegionMenu() {
-        if (!regionMenu) return;
-        regionMenu.classList.toggle("hidden");
-      }
-      if (regionInput) {
-        regionInput.addEventListener("click", toggleRegionMenu);
-      }
-      if (toggleRegionMenuBtn) {
-        toggleRegionMenuBtn.addEventListener("click", toggleRegionMenu);
-      }
-      if (regionMenu && regionInput) {
-        regionMenu.querySelectorAll(".region-option").forEach(function (optionBtn) {
-          optionBtn.addEventListener("click", function () {
-            regionInput.value = optionBtn.textContent.trim();
-            regionMenu.classList.add("hidden");
+      function renderAddressList(options) {
+        if (!addressList || !emptyAddressNotice) return;
+        const renderOptions = options || {};
+        if (!addressEntries.length) {
+          if (saveAnimationTimeoutId) {
+            window.clearTimeout(saveAnimationTimeoutId);
+            saveAnimationTimeoutId = null;
+          }
+          addressList.innerHTML = "";
+          emptyAddressNotice.classList.remove("hidden");
+          return;
+        }
+        emptyAddressNotice.classList.add("hidden");
+
+        const orderedEntries = addressEntries
+          .map(function (item, originalIndex) {
+            return { item: item, originalIndex: originalIndex };
+          })
+          .sort(function (a, b) {
+            if (a.item.isDefault === b.item.isDefault) return a.originalIndex - b.originalIndex;
+            return a.item.isDefault ? -1 : 1;
           });
+
+        const cardsMarkup = orderedEntries
+          .map(function (record) {
+            const item = record.item;
+            return `
+              <article class="rounded-lg border border-gray-200 bg-white p-4 address-card-enter" data-index="${record.originalIndex}">
+                <div class="mb-2 flex items-center justify-between gap-3">
+                  <p class="text-sm font-medium text-gray-900">${item.addressLine || "Address"}</p>
+                  <div class="flex items-center gap-2">
+                    ${item.isDefault ? '<span class="rounded-full bg-gray-100 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-wide text-gray-600">Default address</span>' : ""}
+                    <button class="inline-flex h-6 w-6 items-center justify-center text-[#222222] transition-colors hover:text-black/70" type="button" data-action="edit-address" data-index="${record.originalIndex}" aria-label="Edit address">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                      </svg>
+                    </button>
+                    <button class="inline-flex h-6 w-6 items-center justify-center text-[#222222] transition-colors hover:text-black/70" type="button" data-action="delete-address" data-index="${record.originalIndex}" aria-label="Delete address">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 7l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7m3 0V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m-9 0h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="space-y-1 text-sm text-gray-700">
+                  ${item.city ? `<p>${item.city}</p>` : ""}
+                  ${item.postalCode ? `<p>${item.postalCode}</p>` : ""}
+                  ${item.phone ? `<p>${item.phone}</p>` : ""}
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+
+        if (renderOptions.showSkeleton) {
+          addressList.innerHTML = `
+            <div class="rounded-lg border border-gray-200 bg-white p-4">
+              <div class="mb-3 flex items-center gap-3">
+                <div class="address-skeleton h-4 w-4 rounded-full"></div>
+                <div class="address-skeleton h-4 w-64 rounded"></div>
+              </div>
+              <div class="address-skeleton h-40 w-full rounded-lg"></div>
+              <div class="mt-4 space-y-2">
+                <div class="address-skeleton h-3 w-40 rounded"></div>
+                <div class="address-skeleton h-3 w-24 rounded"></div>
+                <div class="address-skeleton h-10 w-full rounded-lg"></div>
+              </div>
+            </div>
+          `;
+          if (saveAnimationTimeoutId) {
+            window.clearTimeout(saveAnimationTimeoutId);
+          }
+          saveAnimationTimeoutId = window.setTimeout(function () {
+            addressList.innerHTML = cardsMarkup;
+            saveAnimationTimeoutId = null;
+          }, 280);
+          return;
+        }
+
+        addressList.innerHTML = cardsMarkup;
+      }
+      if (addressList) {
+        addressList.addEventListener("click", function (event) {
+          const actionBtn = event.target.closest("button[data-action]");
+          if (!actionBtn) return;
+          const action = actionBtn.getAttribute("data-action");
+          const idx = Number(actionBtn.getAttribute("data-index"));
+          if (!Number.isInteger(idx) || !addressEntries[idx]) return;
+
+          if (action === "delete-address") {
+            addressEntries.splice(idx, 1);
+            saveAddressEntries();
+            renderAddressList();
+            return;
+          }
+
+          if (action === "edit-address") {
+            const current = addressEntries[idx];
+            editingAddressIndex = idx;
+            if (addressLineInput) addressLineInput.value = current.addressLine || "";
+            if (postalCodeInput) postalCodeInput.value = current.postalCode || "";
+            if (cityInput) cityInput.value = current.city || "";
+            if (phoneInput) phoneInput.value = current.phone || "";
+            if (defaultAddressInput) defaultAddressInput.checked = !!current.isDefault;
+            if (editAddressTitle) editAddressTitle.textContent = "Edit address";
+            openEditAddress("edit");
+          }
         });
       }
-      document.addEventListener("click", function (event) {
-        if (!regionMenu || regionMenu.classList.contains("hidden")) return;
-        var regionContainer = regionInput ? regionInput.closest(".relative") : null;
-        if (regionContainer && !regionContainer.contains(event.target)) {
-          regionMenu.classList.add("hidden");
-        }
+      [
+        [profileFirstNameInput, profileFirstNameError],
+        [profileLastNameInput, profileLastNameError],
+        [addressLineInput, addressLineError],
+        [postalCodeInput, postalCodeError],
+        [cityInput, cityError],
+        [phoneInput, phoneError],
+      ].forEach(function (pair) {
+        const inputEl = pair[0];
+        const errorEl = pair[1];
+        if (!inputEl) return;
+        inputEl.addEventListener("input", function () {
+          clearFieldError(inputEl, errorEl);
+        });
+        inputEl.addEventListener("focus", function () {
+          clearFieldError(inputEl, errorEl);
+        });
       });
+      const persistedAddresses = loadAddressEntries();
+      if (persistedAddresses.length) {
+        persistedAddresses.forEach(function (entry) {
+          addressEntries.push(entry);
+        });
+        renderAddressList({ showSkeleton: true });
+      } else {
+        renderAddressList();
+      }
     </script>
   </body>
 </html>

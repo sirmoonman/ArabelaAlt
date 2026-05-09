@@ -226,7 +226,7 @@
         body { font-family: 'Poppins', sans-serif; }
 </style>
 </head>
-<body class="bg-white text-on-surface selection:bg-primary-fixed-dim overflow-x-hidden">
+<body class="bg-white text-on-surface selection:bg-primary-fixed-dim overflow-x-hidden" data-authenticated="{{ request.user.is_authenticated|yesno:'true,false' }}" data-login-url="{% url 'accounts:login' %}" data-orders-url="{% url 'gowns:orders' %}">
 
 <!-- TOP NAVBAR -->
 <header class="fixed top-0 w-full z-[70] homepage-header bg-white/80 dark:bg-[#222222]/80 backdrop-blur-md border-b border-black/5">
@@ -966,16 +966,18 @@
         updateCartTotals();
     }
 
-{% if request.user.is_authenticated %}
 (function () {
     const userBtn = document.getElementById('user-icon-btn');
     if (!userBtn) return;
-
+    const body = document.body;
+    const isAuthenticated = body && body.dataset ? body.dataset.authenticated : '';
+    const ordersUrl = body && body.dataset ? body.dataset.ordersUrl : '';
+    const loginUrl = body && body.dataset ? body.dataset.loginUrl : '';
     userBtn.addEventListener('click', function () {
-        window.location.href = "{% url 'gowns:orders' %}";
+        if (isAuthenticated === 'true' && ordersUrl) window.location.href = ordersUrl;
+        else if (loginUrl) window.location.href = loginUrl;
     });
 })();
-{% endif %}
 </script>
 </body>
 </html>

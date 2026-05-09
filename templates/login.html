@@ -132,6 +132,7 @@
                 </div>
                 <form id="login_form" method="POST" action="{% url 'accounts:login' %}" novalidate>
                   {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ next|default:'' }}">
                   <div class="space-y-5">
                     <!-- Email -->
                     <div>
@@ -219,7 +220,8 @@
                               @change="checkboxToggle = !checkboxToggle"
                             />
                             <div
-                              :class="checkboxToggle ? 'border-brand-500 bg-brand-500' : 'bg-transparent border-gray-300 dark:border-gray-700'"
+                              :class="checkboxToggle ? '' : 'bg-transparent border-gray-300 dark:border-gray-700'"
+                              :style="checkboxToggle ? 'border-color:#000;background-color:#000;' : ''"
                               class="mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]"
                             >
                               <span :class="checkboxToggle ? '' : 'opacity-0'">

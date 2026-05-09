@@ -382,6 +382,12 @@
         }, 260);
       }
 
+      window.addEventListener("pageshow", function () {
+        if (transitionOverlay) {
+          transitionOverlay.classList.remove("active");
+        }
+      });
+
       userBtn.addEventListener("click", openSidebar);
       closeBtn.addEventListener("click", closeSidebar);
       overlay.addEventListener("click", closeSidebar);

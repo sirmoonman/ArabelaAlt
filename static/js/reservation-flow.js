@@ -70,7 +70,16 @@
             sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
         } catch (err) {}
         var a = e && e.currentTarget;
-        if (a && a.href) window.location.href = a.href;
+        var href = (a && a.href) ? a.href : '';
+        var body = document && document.body;
+        var isAuthenticated = body && body.dataset ? body.dataset.authenticated : '';
+        var loginUrl = body && body.dataset ? body.dataset.loginUrl : '';
+        if (isAuthenticated === 'false' && loginUrl) {
+            var nextParam = encodeURIComponent(href || '/');
+            window.location.href = loginUrl + '?next=' + nextParam;
+            return false;
+        }
+        if (href) window.location.href = href;
         return false;
     };
 

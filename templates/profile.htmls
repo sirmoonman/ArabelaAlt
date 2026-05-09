@@ -265,7 +265,7 @@
                 </svg>
               </button>
             </label>
-            <p class="mt-1 h-6 text-gray-900 font-medium">{{ display_name }}</p>
+            <p class="mt-1 h-6 text-gray-900 font-medium" id="profile-display-name">{{ display_name }}</p>
           </div>
 
           <div class="flex flex-col">
@@ -336,6 +336,7 @@
       const profileLastNameInput = document.getElementById("profile-last-name-input");
       const profileFirstNameError = document.getElementById("profile-first-name-error");
       const profileLastNameError = document.getElementById("profile-last-name-error");
+      const profileDisplayName = document.getElementById("profile-display-name");
       const editAddressOpenBtn = document.getElementById("open-edit-address-btn");
       const editAddressOverlay = document.getElementById("edit-address-overlay");
       const editAddressModal = document.getElementById("edit-address-modal");
@@ -506,6 +507,17 @@
           if (!lastNameValue) {
             event.preventDefault();
             showFieldError(profileLastNameInput, profileLastNameError, "This field is required.");
+            return;
+          }
+
+          const submitBtn = editProfileForm.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add("opacity-80", "cursor-wait");
+          }
+          closeEditProfile();
+          if (profileDisplayName) {
+            profileDisplayName.innerHTML = '<span class="skeleton inline-block h-5 w-44 rounded"></span>';
           }
         });
       }

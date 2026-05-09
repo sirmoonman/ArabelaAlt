@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from smtplib import SMTPException
 import random
 import re
@@ -48,45 +49,51 @@ def login_view(request):
     notice = request.session.pop('auth_notice', '')
     if notice:
         context['error'] = notice
+    next_from_get = (request.GET.get('next') or '').strip()
+    if next_from_get:
+        context['next'] = next_from_get
 
     if request.method == 'POST':
         email = request.POST.get('email', '').strip().lower()
         password = request.POST.get('password', '')
+        next_url = (request.POST.get('next') or request.GET.get('next') or '').strip()
+        if next_url:
+            context['next'] = next_url
 
         try:
             validate_email(email)
         except ValidationError:
-            return render(request, 'login.html', {'error': 'Please enter a valid email address.', 'email': email})
+            context.update({'error': 'Please enter a valid email address.', 'email': email})
+            return render(request, 'login.html', context)
 
         if not password:
-            return render(request, 'login.html', {'error': 'Please enter your password.', 'email': email})
+            context.update({'error': 'Please enter your password.', 'email': email})
+            return render(request, 'login.html', context)
 
         user = User.objects.filter(email__iexact=email).first()
         if not user:
-            return render(
-                request,
-                'login.html',
-                {'error': 'No account found for this email. Please sign up first.', 'email': email},
-            )
+            context.update({'error': 'No account found for this email. Please sign up first.', 'email': email})
+            return render(request, 'login.html', context)
 
         if not user.has_usable_password():
-            return render(
-                request,
-                'login.html',
-                {'error': 'This account uses Google sign in. Please continue with Google.', 'email': email},
-            )
+            context.update({'error': 'This account uses Google sign in. Please continue with Google.', 'email': email})
+            return render(request, 'login.html', context)
 
         is_verified = EmailAddress.objects.filter(user=user, email__iexact=email, verified=True).exists()
         if not is_verified:
-            return render(request, 'login.html', {'error': 'Please verify your email first', 'email': email})
+            context.update({'error': 'Please verify your email first', 'email': email})
+            return render(request, 'login.html', context)
 
         authenticated_user = authenticate(request, username=user.username, password=password)
         if not authenticated_user:
-            return render(request, 'login.html', {'error': 'Invalid email or password.', 'email': email})
+            context.update({'error': 'Invalid email or password.', 'email': email})
+            return render(request, 'login.html', context)
 
         login(request, authenticated_user)
         remember_me = request.POST.get('remember_me') == 'on'
         request.session.set_expiry(settings.REMEMBER_ME_AGE if remember_me else 0)
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+            return redirect(next_url)
         return redirect('gowns:homepage')
 
     return render(request, 'login.html', context)
@@ -318,4 +325,4 @@ def verify_email_code_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('accounts:login')
+    return redirect('gowns:homepage')

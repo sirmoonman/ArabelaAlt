@@ -68,6 +68,9 @@
 // --- Cart logic for selection.html ---
 const RESERVATION_STORAGE_KEY = 'arabela_reservation_cart';
 const DEPOSIT_PER_ITEM = 2000;
+const IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
+const LOGIN_URL = "{% url 'accounts:login' %}";
+const RESERVATION_URL = "{% url 'gowns:reservation' %}";
 
 function formatPeso(amount) {
   return '₱ ' + amount.toLocaleString();
@@ -156,6 +159,12 @@ function proceedReservationFromSelection() {
     return;
   }
 
+  if (!IS_AUTHENTICATED) {
+    const nextParam = encodeURIComponent(RESERVATION_URL);
+    window.location.href = `${LOGIN_URL}?next=${nextParam}`;
+    return;
+  }
+
   let subtotal = 0;
   let itemCount = 0;
   const items = cart.map((item) => {
@@ -185,7 +194,7 @@ function proceedReservationFromSelection() {
     total: subtotal + deposit
   };
   sessionStorage.setItem(RESERVATION_STORAGE_KEY, JSON.stringify(payload));
-  window.location.href = "{% url 'gowns:reservation' %}";
+  window.location.href = RESERVATION_URL;
 }
 
 window.addEventListener('DOMContentLoaded', () => {

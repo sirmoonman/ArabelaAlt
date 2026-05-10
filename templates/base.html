@@ -148,20 +148,20 @@
 
   <!-- TOP NAVBAR -->
   <header id="main-header" class="fixed top-0 w-full z-[70]">
-    <nav class="flex items-center w-full px-10 h-20 gap-8">
+    <nav class="flex items-center w-full px-12 h-24 gap-10">
 
       <!-- Left: Logo + Nav links -->
       <div class="flex items-center gap-10 shrink-0">
         <div class="flex-shrink-0">
           <a href="{% url 'gowns:homepage' %}" class="block">
-            <h1 id="site-logo" class="text-[1.6rem] font-semibold text-[#1a1a1a]" style="font-family: 'Playfair Display', serif; letter-spacing: -0.01em;">Arabela</h1>
+            <h1 id="site-logo" class="text-[2rem] font-semibold text-[#1a1a1a]" style="font-family: 'Playfair Display', serif; letter-spacing: -0.01em;">Arabela</h1>
           </a>
         </div>
 
         {% if url_name != "confirmation" %}
         <div class="hidden md:flex gap-8 items-center self-stretch">
           <div class="relative group h-full flex items-center">
-            <span class="nav-link-underline text-[0.72rem] font-medium tracking-[0.18em] uppercase text-[#1a1a1a] cursor-default flex items-center gap-1.5 hover:text-[#555] transition-colors duration-200">
+            <span class="nav-link-underline text-[0.82rem] font-medium tracking-[0.18em] uppercase text-[#1a1a1a] cursor-default flex items-center gap-1.5 hover:text-[#555] transition-colors duration-200">
               Rent
               <svg class="w-2 h-2 opacity-40" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </span>
@@ -179,7 +179,7 @@
           </div>
 
           <div class="relative group h-full flex items-center">
-            <a class="nav-link-underline nav-active-dot {% if url_name == 'how_it_works' %}active{% endif %} text-[0.72rem] font-medium tracking-[0.18em] uppercase text-[#1a1a1a] hover:text-[#555] transition-colors duration-200" href="{% url 'gowns:how_it_works' %}">
+            <a class="nav-link-underline nav-active-dot {% if url_name == 'how_it_works' %}active{% endif %} text-[0.82rem] font-medium tracking-[0.18em] uppercase text-[#1a1a1a] hover:text-[#555] transition-colors duration-200" href="{% url 'gowns:how_it_works' %}">
               How it Works
             </a>
           </div>
@@ -191,9 +191,9 @@
       {% if url_name != "reservation" and url_name != "confirmation" %}
       <div class="flex-1 hidden md:flex justify-center">
         <div class="relative w-full max-w-xs">
-          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-black/25 text-[0.95rem] pointer-events-none">search</span>
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-black/25 text-[1.1rem] pointer-events-none">search</span>
           <input id="nav-search-input" type="text" placeholder="Search pieces..."
-                 class="w-full pl-9 pr-4 py-2 text-[0.75rem] bg-black/4 border border-black/8 focus:outline-none focus:border-black/25 focus:bg-white transition-all rounded-full placeholder:text-black/30 font-body"
+                 class="w-full pl-10 pr-4 py-2.5 text-[0.85rem] bg-black/4 border border-black/8 focus:outline-none focus:border-black/25 focus:bg-white transition-all rounded-full placeholder:text-black/30 font-body"
                  onfocus="openSearchFromNav(this)" oninput="syncNavSearch(this.value)" />
         </div>
       </div>
@@ -206,17 +206,17 @@
         {% if url_name != "confirmation" %}
           {% if url_name != "reservation" %}
           <button type="button" class="nav-icon-btn text-[#1a1a1a] hover:text-[#555]" onclick="toggleAI()" aria-label="Arabela Recommends">
-            <span class="material-symbols-outlined text-[1.1rem]" style='font-variation-settings: "FILL" 1;'>auto_fix_high</span>
+            <span class="material-symbols-outlined text-[1.35rem]" style='font-variation-settings: "FILL" 1;'>auto_fix_high</span>
           </button>
           {% endif %}
           <button type="button" id="cart-icon-btn" class="nav-icon-btn relative text-[#1a1a1a] hover:text-[#555]" onclick="toggleCart()" aria-label="Open selection">
-            <span class="material-symbols-outlined text-[1.1rem]">shopping_bag</span>
+            <span class="material-symbols-outlined text-[1.35rem]">shopping_bag</span>
             <span id="cart-badge" class="cart-badge">0</span>
           </button>
           {% if request.user.is_authenticated %}
             <div class="relative">
               <button type="button" id="user-menu-btn" class="nav-icon-btn text-[#1a1a1a] hover:text-[#555]" aria-label="Open account menu" onclick="toggleUserDropdown()">
-                <span class="material-symbols-outlined text-[1.1rem]">person</span>
+                <span class="material-symbols-outlined text-[1.35rem]">person</span>
               </button>
               <div id="user-dropdown" class="absolute right-0 top-full mt-3 w-48 bg-white border border-black/8 shadow-lg z-[90] py-2">
                 <a href="{% url 'gowns:profile' %}" class="flex items-center gap-3 px-5 py-3 text-[0.75rem] uppercase tracking-[0.12em] text-[#444] hover:text-[#111] hover:bg-black/3 transition-colors font-body">
@@ -237,7 +237,7 @@
           {% else %}
             <a href="{% url 'accounts:login' %}">
               <button type="button" class="nav-icon-btn text-[#1a1a1a] hover:text-[#555]">
-                <span class="material-symbols-outlined text-[1.1rem]">person</span>
+                <span class="material-symbols-outlined text-[1.35rem]">person</span>
               </button>
             </a>
           {% endif %}

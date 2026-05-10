@@ -1,5 +1,4 @@
 {% load static %}
-{% load socialaccount %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -87,7 +86,7 @@
               <div>
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 mb-5 sm:mb-8">
                   <a
-                    href="{% provider_login_url 'google' process='login' %}"
+                    href="/accounts/google/login/"
                     class="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10"
                   >
                     <svg

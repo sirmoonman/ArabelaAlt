@@ -312,3 +312,44 @@ When logged in, clicking the person icon shows:
 - Contact page updated with real address, phone, hours, social links
 - `home.html` duplicate `{% endblock %}` fixed
 - Orphaned `{% endif %}` in base.html fixed
+
+---
+
+## Third Session Updates
+
+### Navbar Size Increase
+
+- **Taller navbar** — height increased from `h-20` (80px) to `h-24` (96px)
+- **Larger logo** — `text-[1.6rem]` → `text-[2rem]`
+- **Larger nav links** — `text-[0.72rem]` → `text-[0.82rem]` (Rent, How it Works)
+- **Larger search bar** — `text-[0.75rem]` → `text-[0.85rem]`, padding bumped to `py-2.5`
+- **Larger icons** — wand, bag, person icons `text-[1.1rem]` → `text-[1.35rem]`
+- **Wider padding** — `px-10` → `px-12`, `gap-8` → `gap-10`
+
+### How It Works Page Redesign
+
+Full visual and animation overhaul of `/how-it-works/`:
+
+**Typography**
+- Page heading: `text-4xl/5xl` → `text-5xl/7xl` Playfair Display
+- Step titles: small uppercase labels → `text-xl/2xl` Playfair headings
+- Body text: `text-sm` → `text-base/lg`
+- Added descriptive subtitle under the main heading
+
+**Visuals**
+- Giant decorative step numbers — `clamp(5rem, 12vw, 9rem)`, solid `rgba(0,0,0,0.10)` fill (darkens on hover)
+- Circular icon ring per step with filled Material Symbol icons (search, shopping_bag, store, celebration, refresh)
+- Thin connecting lines between steps
+
+**Animations**
+- Scroll-triggered fade + slide-up reveal (Intersection Observer) for header, each step, and CTA
+- Steps stagger with 100ms delay per card
+- Icon ring fills black with white icon on card hover
+- "Browse Collection" arrow slides right on hover
+- CTA button has sliding fill effect on hover
+
+### Google OAuth Groundwork
+
+- `settings.py` — Google OAuth `APP` block added, reads `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` from `.env`
+- `login.html` — Google sign-in button re-added with hardcoded `/accounts/google/login/` URL (no template tag crash)
+- `signup.html` — Removed `{% load socialaccount %}` dependency, hardcoded Google login URL

@@ -3,11 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up | Arabela</title>
     <link rel="icon" type="image/svg+xml" href="{% static 'arabela_admin/images/logo/favicon-arabela.svg' %}" />
   <link href="{% static 'arabela_admin/style.css' %}" rel="stylesheet">
@@ -275,8 +271,8 @@
                         </div>
                         <span class="ml-3">
                           By creating an account means you agree to the 
-                          <a href="#" class="hero-terms-link hover:text-slate-700" style="color:#000;font-weight:700;">Terms and Conditions</a>, and our
-                          <a href="#" class="hero-terms-link hover:text-slate-700" style="color:#000;font-weight:700;">Privacy Policy</a>
+                          <a href="{% url 'gowns:terms' %}" class="hero-terms-link hover:text-slate-700">Terms and Conditions</a>, and our
+                          <a href="{% url 'gowns:terms' %}" class="hero-terms-link hover:text-slate-700">Privacy Policy</a>
                         </span>
                       </label>
                     </div>
@@ -285,7 +281,6 @@
                       <button
                         type="submit"
                         class="hero-submit-button flex items-center justify-center w-full px-4 py-3 text-sm transition rounded-lg shadow-theme-xs hover:bg-slate-900"
-                        style="background-color:#000;color:#fff;font-weight:700;"
                       >
                         Sign Up
                       </button>
@@ -307,7 +302,6 @@
                     <a
                       href="{% url 'accounts:login' %}"
                       class="hero-action-link text-sm hover:text-slate-700"
-                      style="color:#000;font-weight:700;"
                       >Sign In</a
                     >
                   </p>

@@ -373,3 +373,30 @@ Full visual and animation overhaul of `/how-it-works/`:
 - `.env` — switched `EMAIL_BACKEND` from SMTP to `console.EmailBackend` for local development (emails print to terminal)
 - `accounts/views.py` — widened `except SMTPException` to `except Exception` to catch all email send failures (e.g. `ConnectionRefusedError`)
 - Removed unused `from smtplib import SMTPException` import
+
+---
+
+## Fifth Session Updates
+
+### Project Audit & Cleanup
+
+- Deleted `fix_dashboard.py` — one-off script with hardcoded path to another machine, will never run
+- Deleted `integrate_admin_template.py` — setup-time script that depended on a build folder not in the repo
+
+### HTML Template Optimization (all 23 user-facing templates)
+
+| File | Fix |
+|------|-----|
+| `selection.html` | "Continue Shopping" dead `href="#"` → `{% url 'gowns:collections' %}` |
+| `signup.html` | Terms/Privacy Policy links `href="#"` → `{% url 'gowns:terms' %}` |
+| `login.html` | Removed `user-scalable=no, maximum-scale=1.0` (blocked pinch zoom — bad for accessibility) |
+| `signup.html` | Removed `user-scalable=no, maximum-scale=1.0` |
+| `login.html` | Removed obsolete `<meta http-equiv="X-UA-Compatible" content="ie=edge">` |
+| `signup.html` | Removed obsolete `<meta http-equiv="X-UA-Compatible">` |
+| `login.html` | Removed inline `style=` on submit button and Sign Up link (CSS class already sets these) |
+| `signup.html` | Removed inline `style=` on submit button and Sign In link |
+| `verification.html` | `autocomplete="one-time-code"` now only on first input (not all 6) |
+| `verification.html` | Removed redundant `transition-colors` (covered by `transition-all`) |
+| `contact.html` | Stripped tracking params from Facebook URL |
+| `products.html` | Fixed invalid `text-body-md` class → `text-sm`; fixed dead Facebook footer link |
+| `reservation.html` | Fixed "Rental Terms" dead link → `{% url 'gowns:terms' %}`; fixed redundant "both deposit and security deposit" wording |

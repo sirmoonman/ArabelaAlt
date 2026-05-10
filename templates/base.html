@@ -349,32 +349,79 @@
         </div>
       </footer>
     {% else %}
-      <footer class="bg-white w-full py-12 px-8 {% block footer_class %}{% endblock %}">
-        <div class="w-full max-w-[1920px] mx-auto">
-          <div class="flex flex-col sm:flex-row sm:flex-wrap items-start gap-x-8 sm:gap-x-10 md:gap-x-12 lg:gap-x-16 gap-y-8 text-left">
-            <div class="flex items-center gap-3 shrink-0">
-              <a href="{% url 'gowns:homepage' %}" class="text-lg font-bold text-[#222222] tracking-tighter font-body">ARABELA</a>
-              <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="inline-flex text-[#222222] scale-95 active:scale-90 transition-all hover:opacity-70" aria-label="Arabela on Facebook">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      <footer class="bg-white w-full border-t border-black/5 {% block footer_class %}{% endblock %}">
+        <!-- Main footer grid -->
+        <div class="w-full max-w-[1200px] mx-auto px-8 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          <!-- Col 1: Brand -->
+          <div class="flex flex-col gap-4">
+            <a href="{% url 'gowns:homepage' %}" class="text-xl font-bold text-[#222222] tracking-tighter font-body" style="font-family: 'Playfair Display', serif;">Arabela</a>
+            <p class="text-[0.6875rem] text-[#615E57] leading-relaxed font-body">High-fashion gown rentals for every occasion. Visit us for a personalized fitting.</p>
+            <div class="flex items-center gap-3 mt-1">
+              <!-- Facebook -->
+              <a href="https://www.facebook.com/arabellahouseofglamorousgown?rdid=coaQ3B7p5zAyJ83d&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BX8YbWHZS#" target="_blank" rel="noopener noreferrer" class="text-[#222222] hover:opacity-60 transition-opacity" aria-label="Arabela on Facebook">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <!-- TikTok -->
+              <a href="https://www.tiktok.com/@arabelagownrental" target="_blank" rel="noopener noreferrer" class="text-[#222222] hover:opacity-60 transition-opacity" aria-label="Arabela on TikTok">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
               </a>
             </div>
-            <div class="shrink-0">
-              <p class="text-base font-medium text-[#222222] font-body mb-2">Rent</p>
-              <a href="{% url 'gowns:how_it_works' %}" class="inline-block text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:underline decoration-1 underline-offset-4 transition-opacity scale-95 active:scale-90 hover:text-[#222222] font-body">How it works</a>
-            </div>
-            <div class="shrink-0">
-              <p class="text-base font-medium text-[#222222] font-body mb-2">Info</p>
-              <ul class="flex flex-col gap-1.5">
-                {% if url_name != "reservation" and url_name != "confirmation" %}
-                  <li>
-                    <button type="button" onclick="toggleSearch()" class="text-left text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:underline decoration-1 underline-offset-4 transition-opacity scale-95 active:scale-90 hover:text-[#222222] bg-transparent border-0 p-0 cursor-pointer font-body leading-snug">Search</button>
-                  </li>
-                {% endif %}
-                <li><a href="{% url 'gowns:about' %}" class="inline-block text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:underline decoration-1 underline-offset-4 transition-opacity scale-95 active:scale-90 hover:text-[#222222] font-body leading-snug">About us</a></li>
-                <li><a href="{% url 'gowns:contact' %}" class="inline-block text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:underline decoration-1 underline-offset-4 transition-opacity scale-95 active:scale-90 hover:text-[#222222] font-body leading-snug">Contact us</a></li>
-                <li><a href="{% url 'gowns:how_it_works' %}" class="inline-block text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:underline decoration-1 underline-offset-4 transition-opacity scale-95 active:scale-90 hover:text-[#222222] font-body leading-snug">FAQs</a></li>
-                <li><a href="{% url 'gowns:terms' %}" class="inline-block text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:underline decoration-1 underline-offset-4 transition-opacity scale-95 active:scale-90 hover:text-[#222222] font-body leading-snug">Terms and conditions</a></li>
-              </ul>
+          </div>
+
+          <!-- Col 2: Rent / Collections -->
+          <div>
+            <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-[#222222] font-semibold font-body mb-4">Rent</p>
+            <ul class="flex flex-col gap-2">
+              <li><a href="{% url 'gowns:collections' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">All Collections</a></li>
+              <li><a href="{% url 'gowns:collection_wedding' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Wedding</a></li>
+              <li><a href="{% url 'gowns:collection_dresses' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Dresses</a></li>
+              <li><a href="{% url 'gowns:collection_filipiniana' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Filipiniana</a></li>
+              <li><a href="{% url 'gowns:collection_ball_gown' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Ball Gown</a></li>
+              <li><a href="{% url 'gowns:collection_suit' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Suit</a></li>
+              <li><a href="{% url 'gowns:collection_kid_suit' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Kids Suit</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Info -->
+          <div>
+            <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-[#222222] font-semibold font-body mb-4">Info</p>
+            <ul class="flex flex-col gap-2">
+              <li><a href="{% url 'gowns:how_it_works' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">How it Works</a></li>
+              <li><a href="{% url 'gowns:about' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">About Us</a></li>
+              <li><a href="{% url 'gowns:contact' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Contact Us</a></li>
+              <li><a href="{% url 'gowns:terms' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] hover:underline underline-offset-4 transition-colors font-body">Terms &amp; Conditions</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 4: Visit Us -->
+          <div>
+            <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-[#222222] font-semibold font-body mb-4">Visit Us</p>
+            <ul class="flex flex-col gap-3">
+              <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-[1rem] text-[#615E57] mt-0.5 shrink-0">location_on</span>
+                <span class="text-[0.6875rem] text-[#615E57] leading-relaxed font-body">Park Place Centre Bldg,<br>Antipolo, 1870 Rizal</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[1rem] text-[#615E57] shrink-0">call</span>
+                <a href="tel:09277915602" class="text-[0.6875rem] text-[#615E57] hover:text-[#222222] transition-colors font-body">0927 791 5602</a>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-[1rem] text-[#615E57] mt-0.5 shrink-0">schedule</span>
+                <span class="text-[0.6875rem] text-[#615E57] leading-relaxed font-body">Mon – Sun<br>10:00 AM – 7:00 PM</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="border-t border-black/5 px-8 py-5">
+          <div class="w-full max-w-[1200px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] font-body">© 2026 Arabela. All rights reserved.</p>
+            <div class="flex items-center gap-5">
+              <a href="{% url 'gowns:terms' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] transition-colors font-body">Terms</a>
+              <a href="{% url 'gowns:contact' %}" class="text-[0.6875rem] tracking-widest uppercase text-[#615E57] hover:text-[#222222] transition-colors font-body">Contact</a>
             </div>
           </div>
         </div>

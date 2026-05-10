@@ -174,6 +174,22 @@ def product_detail(request, collection: str, slug: str):
     )
 
 
+def how_it_works(request):
+    return render(request, 'how_it_works.html', {})
+
+
+def about(request):
+    return render(request, 'about.html', {})
+
+
+def contact(request):
+    return render(request, 'contact.html', {})
+
+
+def terms(request):
+    return render(request, 'terms.html', {})
+
+
 def reservation(request):
     return render(request, 'reservation.html', {})
 
@@ -209,7 +225,7 @@ def profile(request):
     last_name = name_parts[1] if len(name_parts) > 1 else ""
     return render(
         request,
-        'profile.htmls',
+        'profile.html',
         {
             "display_name": profile.display_name,
             "profile_first_name": first_name,

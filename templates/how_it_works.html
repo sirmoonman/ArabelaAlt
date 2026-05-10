@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}ARABELA | How It Works{% endblock %}
+
+{% block main_class %}pt-24 pb-28 md:pb-20{% endblock %}
+
+{% block content %}
+
+  <div class="max-w-[1200px] mx-auto px-6 sm:px-10 md:px-16">
+
+    <!-- Header -->
+    <div class="text-center mb-20 md:mb-28">
+      <p class="text-[0.6875rem] uppercase tracking-[0.28em] text-on-surface-variant font-body mb-4">The Process</p>
+      <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-on-surface" style="font-family: 'Playfair Display', serif;">How It Works</h1>
+    </div>
+
+    <!-- Steps -->
+    <div class="divide-y divide-black/5">
+
+      <!-- Step 1 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 py-12 md:py-16 items-start">
+        <div class="md:col-span-2 flex items-center gap-4 md:flex-col md:items-start md:gap-2">
+          <span class="text-[0.6rem] uppercase tracking-[0.3em] text-on-surface-variant font-body">Step</span>
+          <span class="text-5xl font-light text-on-surface/10 leading-none" style="font-family: 'Playfair Display', serif;">01</span>
+        </div>
+        <div class="md:col-span-4">
+          <p class="text-[0.6875rem] uppercase tracking-[0.22em] text-on-surface font-semibold font-body mb-3">Find Your Pieces</p>
+          <p class="text-sm text-on-surface-variant leading-relaxed">Browse our collection for your rental date. Filter by size and style to find your favorites.</p>
+        </div>
+        <div class="md:col-span-6 flex items-center justify-start md:justify-end">
+          <a href="{% url 'gowns:collections' %}" class="inline-flex items-center gap-3 border border-black/15 text-on-surface text-[0.7rem] uppercase tracking-[0.18em] px-7 py-3.5 hover:border-black transition-colors duration-300 font-body">
+            Browse Collection
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 py-12 md:py-16 items-start">
+        <div class="md:col-span-2 flex items-center gap-4 md:flex-col md:items-start md:gap-2">
+          <span class="text-[0.6rem] uppercase tracking-[0.3em] text-on-surface-variant font-body">Step</span>
+          <span class="text-5xl font-light text-on-surface/10 leading-none" style="font-family: 'Playfair Display', serif;">02</span>
+        </div>
+        <div class="md:col-span-7">
+          <p class="text-[0.6875rem] uppercase tracking-[0.22em] text-on-surface font-semibold font-body mb-3">Add to Cart</p>
+          <p class="text-sm text-on-surface-variant leading-relaxed">Once you've selected your pieces, book a rental period. If you need the rental for more than the allotted time, send us an email to make the request.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 py-12 md:py-16 items-start">
+        <div class="md:col-span-2 flex items-center gap-4 md:flex-col md:items-start md:gap-2">
+          <span class="text-[0.6rem] uppercase tracking-[0.3em] text-on-surface-variant font-body">Step</span>
+          <span class="text-5xl font-light text-on-surface/10 leading-none" style="font-family: 'Playfair Display', serif;">03</span>
+        </div>
+        <div class="md:col-span-7">
+          <p class="text-[0.6875rem] uppercase tracking-[0.22em] text-on-surface font-semibold font-body mb-3">Pickup</p>
+          <p class="text-sm text-on-surface-variant leading-relaxed">Visit our boutique on your scheduled pickup date. Our staff will have your pieces ready and do a final check to make sure everything fits perfectly before you leave.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 py-12 md:py-16 items-start">
+        <div class="md:col-span-2 flex items-center gap-4 md:flex-col md:items-start md:gap-2">
+          <span class="text-[0.6rem] uppercase tracking-[0.3em] text-on-surface-variant font-body">Step</span>
+          <span class="text-5xl font-light text-on-surface/10 leading-none" style="font-family: 'Playfair Display', serif;">04</span>
+        </div>
+        <div class="md:col-span-7">
+          <p class="text-[0.6875rem] uppercase tracking-[0.22em] text-on-surface font-semibold font-body mb-3">Wear Them</p>
+          <p class="text-sm text-on-surface-variant leading-relaxed">Don't forget to snap some shots — we'd love to see them and hear your feedback!</p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 py-12 md:py-16 items-start">
+        <div class="md:col-span-2 flex items-center gap-4 md:flex-col md:items-start md:gap-2">
+          <span class="text-[0.6rem] uppercase tracking-[0.3em] text-on-surface-variant font-body">Step</span>
+          <span class="text-5xl font-light text-on-surface/10 leading-none" style="font-family: 'Playfair Display', serif;">05</span>
+        </div>
+        <div class="md:col-span-7">
+          <p class="text-[0.6875rem] uppercase tracking-[0.22em] text-on-surface font-semibold font-body mb-3">Return</p>
+          <p class="text-sm text-on-surface-variant leading-relaxed">Bring your pieces back by the agreed return date in their original condition. Once our team inspects the items, your security deposit is fully refunded.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-16 md:mt-24 pb-4">
+      <p class="text-[0.6875rem] uppercase tracking-[0.22em] text-on-surface-variant font-body mb-8">Ready to start?</p>
+      <a href="{% url 'gowns:collections' %}" class="inline-flex items-center justify-center gap-3 bg-black text-white text-[0.75rem] uppercase tracking-[0.2em] px-12 py-5 hover:bg-gray-900 transition-colors duration-300 font-body">
+        Explore the Collection
+      </a>
+    </div>
+
+  </div>
+
+{% endblock %}

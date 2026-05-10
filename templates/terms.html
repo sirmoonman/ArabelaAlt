@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}ARABELA | Terms and Conditions{% endblock %}
+
+{% block main_class %}pt-24 pb-28 md:pb-20 px-6 sm:px-10 md:px-16 max-w-[760px] mx-auto{% endblock %}
+
+{% block content %}
+
+  <div class="text-center mb-16">
+    <p class="text-[0.6875rem] uppercase tracking-[0.28em] text-on-surface-variant font-body">Terms and Conditions</p>
+  </div>
+
+  <div class="space-y-10 text-sm text-on-surface-variant leading-relaxed">
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">1. Rental Agreement</p>
+      <p>By placing a reservation through Arabela, you agree to rent the selected item(s) for the specified rental period. All rentals are subject to availability and confirmation by Arabela staff.</p>
+    </div>
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">2. Security Deposit</p>
+      <p>A security deposit is required for every rental. This deposit is fully refundable upon the safe return of the item(s) in their original condition. Arabela reserves the right to deduct from the deposit for any damage, staining, or loss beyond normal wear.</p>
+    </div>
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">3. Rental Period</p>
+      <p>The rental period begins and ends on the dates specified in your reservation. Late returns are subject to an additional daily rental fee. Extensions must be requested and approved before the original return date.</p>
+    </div>
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">4. Care of Items</p>
+      <p>Renters are responsible for the reasonable care of rented items. Items must be returned clean and undamaged. Do not attempt to wash, alter, or repair any rented item without prior written consent from Arabela.</p>
+    </div>
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">5. Cancellations</p>
+      <p>Cancellations made at least 48 hours before the rental date are eligible for a full refund. Cancellations made within 48 hours of the rental date may be subject to a cancellation fee. No-shows are non-refundable.</p>
+    </div>
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">6. Liability</p>
+      <p>Arabela is not liable for any personal injury, loss, or damage arising from the use of rented items. The renter assumes full responsibility for the item during the rental period.</p>
+    </div>
+
+    <div>
+      <p class="text-[0.6875rem] uppercase tracking-[0.2em] text-on-surface font-semibold mb-3">7. Amendments</p>
+      <p>Arabela reserves the right to update these terms at any time. Continued use of our services constitutes acceptance of any revised terms.</p>
+    </div>
+
+    <div class="border-t border-black/5 pt-8">
+      <p class="text-[0.6875rem] text-on-surface-variant/60">Last updated: January 2026. For questions, visit our <a href="{% url 'gowns:contact' %}" class="underline underline-offset-4 hover:text-on-surface transition-colors">Contact page</a>.</p>
+    </div>
+
+  </div>
+
+{% endblock %}

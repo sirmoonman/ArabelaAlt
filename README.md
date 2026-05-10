@@ -84,8 +84,21 @@ arabela-system/
 | `/how-it-works/` | How It Works (5 steps) |
 | `/accounts/login/` | Login |
 | `/accounts/signup/` | Sign up |
+| `/accounts/login/` | Login |
+| `/accounts/signup/` | Sign up |
 | `/admin/` | Django admin |
-| `/admin-panel/` | Arabela custom admin |
+| `/ara-staff/admin-login/` | Arabela custom admin *(secret URL)* |
+
+---
+
+## Accounts
+
+| Account | Email | Password | Role |
+|---------|-------|----------|------|
+| Test User | test@arabela.com | arabela2026 | Regular user |
+| Admin | admin@arabela.com | arabela@admin2026 | Superuser / staff |
+
+> Admin login page: `http://127.0.0.1:8000/ara-staff/admin-login/` (use **username** not email)
 
 ---
 
@@ -242,3 +255,60 @@ Leave database variables empty to use SQLite locally.
 - **Search** — the search UI is wired up but has no backend query. The search overlay shows category links only.
 - **AI Recommends panel** — the occasion picker and suggestion cards are frontend-only. Connect to `/ai/` endpoint to enable real recommendations.
 - **GCash QR** — static placeholder QR image. Replace with the actual Arabela GCash QR image in `reservation.html`.
+- **Admin URL** — secret admin is at `/ara-staff/admin-login/`. Do not expose this URL publicly.
+
+---
+
+## Second Session Updates
+
+### Navbar Redesign (All 4 Styles Combined)
+
+- **Taller navbar** — height increased from `h-16` to `h-20`
+- **Glassmorphism** — always-on `backdrop-blur` + semi-transparent background; gets more opaque on scroll
+- **No static border** — replaced hard border with frosted glass line; shadow appears only on scroll
+- **Pill search bar** — rounded-full shape with soft background fill, focus glow effect
+- **Logo fix** — "Arabela" properly capitalized, clean Playfair Display (removed italic)
+- **Wider tracking** on nav links for a more editorial feel
+- **Frosted dropdown** — Rent dropdown uses `bg-white/95 backdrop-blur` with hover highlight rows
+- **Icon divider** — subtle vertical line before the right icon group
+
+### Navbar Animations (10 Effects)
+
+| # | Effect | Trigger |
+|---|---|---|
+| 1 | Blur + shadow on scroll | Scroll past 10px |
+| 2 | Sliding underline | Hover nav links |
+| 3 | Icon lift | Hover AI / cart / person |
+| 4 | Cart count badge | Items in cart |
+| 5 | Logo letter spacing | Hover logo |
+| 6 | Active page dot | Current page |
+| 7 | Smooth dropdown slide | Hover Rent |
+| 8 | Search focus glow | Click search bar |
+| 9 | Hide on scroll down / show on scroll up | Scrolling |
+| 10 | Cart shake | Add item to cart |
+
+### Person Icon Dropdown
+
+When logged in, clicking the person icon shows:
+- **Profile** → `/profile/`
+- **My Reservations** → `/reservations/`
+- **Sign Out** → allauth logout
+
+### Footer Redesign
+
+- 4-column grid: **Brand**, **Rent** (all 6 collections), **Info**, **Visit Us**
+- Real business info: address, phone, hours, Facebook + TikTok links
+- Copyright bar at bottom
+
+### Admin Access
+
+- Secret URL changed from `/admin-panel/` to `/ara-staff/`
+- Superuser account created (`admin@arabela.com`)
+- Admin login uses **username** field, not email
+
+### Other Fixes
+
+- `reservations.html` converted from standalone to `base.html` inheritance
+- Contact page updated with real address, phone, hours, social links
+- `home.html` duplicate `{% endblock %}` fixed
+- Orphaned `{% endif %}` in base.html fixed

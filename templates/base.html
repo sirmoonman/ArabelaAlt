@@ -86,10 +86,56 @@
     .ai-scroll::-webkit-scrollbar { width: 2px; }
     .ai-scroll::-webkit-scrollbar-track { background: transparent; }
     .ai-scroll::-webkit-scrollbar-thumb { background: #e5e2e1; }
+
+    /* 1. Scroll effect — shadow + glassmorphism (D) */
+    #main-header { transition: box-shadow 0.3s ease, backdrop-filter 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; background-color: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.6); }
+    #main-header.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.08); background-color: rgba(255,255,255,0.95); border-bottom-color: rgba(0,0,0,0.06); }
+
+    /* 2. Animated underline on nav links */
+    .nav-link-underline { position: relative; }
+    .nav-link-underline::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #1a1a1a; transition: width 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .nav-link-underline:hover::after { width: 100%; }
+    .nav-link-underline.active::after { width: 100%; }
+
+    /* 3. Icon hover lift */
+    .nav-icon-btn { transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease; }
+    .nav-icon-btn:hover { transform: translateY(-2px); }
+
+    /* 4. Cart badge */
+    .cart-badge { position: absolute; top: -6px; right: -7px; min-width: 16px; height: 16px; background: #0b0c0c; color: #fff; border-radius: 999px; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 3px; opacity: 0; transform: scale(0); transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
+    .cart-badge.visible { opacity: 1; transform: scale(1); }
+
+    /* 5. Logo hover letter spacing */
+    #site-logo { transition: letter-spacing 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease; }
+    #site-logo:hover { letter-spacing: 0.06em; opacity: 0.75; }
+
+    /* 6. Page indicator dot on active nav link */
+    .nav-active-dot { position: relative; }
+    .nav-active-dot::before { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: #1a1a1a; opacity: 0; transition: opacity 0.2s ease; }
+    .nav-active-dot.active::before { opacity: 1; }
+
+    /* 7. Dropdown slide */
+    .group:hover .dropdown-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .dropdown-menu { transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1); transform: translateY(-10px); opacity: 0; pointer-events: none; }
+
+    /* 8. Search bar focus glow */
+    #nav-search-input { transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
+    #nav-search-input:focus { border-color: rgba(26,26,26,0.25) !important; box-shadow: 0 0 0 4px rgba(26,26,26,0.06); background-color: white; }
+
+    /* 9. Navbar hide/show on scroll */
+    #main-header { transform: translateY(0); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s ease, backdrop-filter 0.3s ease, background-color 0.3s ease; }
+    #main-header.nav-hidden { transform: translateY(-100%); }
+
+    /* Person dropdown */
+    #user-dropdown { transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1); transform: translateY(-8px) scale(0.96); opacity: 0; pointer-events: none; }
+    #user-dropdown.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+
+    /* 10. Cart shake */
+    @keyframes cart-shake { 0%,100%{transform:translateY(-2px) rotate(0)} 20%{transform:translateY(-2px) rotate(-8deg)} 40%{transform:translateY(-2px) rotate(8deg)} 60%{transform:translateY(-2px) rotate(-5deg)} 80%{transform:translateY(-2px) rotate(5deg)} }
+    .cart-shake { animation: cart-shake 0.4s cubic-bezier(0.36,0.07,0.19,0.97) both; }
+
     #search-overlay { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(-100%); opacity: 0; pointer-events: none; }
     #search-overlay.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
-    .group:hover .dropdown-menu { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-    .dropdown-menu { transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1); transform: translateY(-15px) scale(0.92); opacity: 0; pointer-events: none; }
   </style>
 
   {% block extra_head %}{% endblock %}
@@ -101,39 +147,39 @@
       data-login-url="{% url 'accounts:login' %}">
 
   <!-- TOP NAVBAR -->
-  <header class="fixed top-0 w-full z-[70] bg-white border-b border-black/8">
-    <nav class="flex items-center w-full px-10 h-16 gap-6">
+  <header id="main-header" class="fixed top-0 w-full z-[70]">
+    <nav class="flex items-center w-full px-10 h-20 gap-8">
 
       <!-- Left: Logo + Nav links -->
       <div class="flex items-center gap-10 shrink-0">
         <div class="flex-shrink-0">
           <a href="{% url 'gowns:homepage' %}" class="block">
-            <h1 class="text-2xl font-semibold tracking-tight text-[#1a1a1a]" style="font-family: 'Playfair Display', serif; letter-spacing: -0.01em;">Arabela</h1>
+            <h1 id="site-logo" class="text-[1.6rem] font-semibold text-[#1a1a1a]" style="font-family: 'Playfair Display', serif; letter-spacing: -0.01em;">Arabela</h1>
           </a>
         </div>
 
         {% if url_name != "confirmation" %}
-        <div class="hidden md:flex gap-7 items-center self-stretch">
+        <div class="hidden md:flex gap-8 items-center self-stretch">
           <div class="relative group h-full flex items-center">
-            <span class="text-[0.82rem] font-medium tracking-[0.12em] uppercase text-[#1a1a1a] cursor-default flex items-center gap-1 hover:text-[#555] transition-colors duration-200">
+            <span class="nav-link-underline text-[0.72rem] font-medium tracking-[0.18em] uppercase text-[#1a1a1a] cursor-default flex items-center gap-1.5 hover:text-[#555] transition-colors duration-200">
               Rent
-              <svg class="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              <svg class="w-2 h-2 opacity-40" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </span>
-            <div class="dropdown-menu absolute top-full left-0 w-48 bg-white border-t border-black/10 shadow-sm py-4 z-[80]">
+            <div class="dropdown-menu absolute top-full left-0 w-52 bg-white/95 backdrop-blur-md border border-black/6 shadow-lg py-3 z-[80]">
               <ul class="flex flex-col">
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collections' %}">All</a></li>
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collection_dresses' %}">Dresses</a></li>
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collection_filipiniana' %}">Filipiniana</a></li>
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collection_kid_suit' %}">Kids suit</a></li>
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collection_wedding' %}">Wedding</a></li>
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collection_suit' %}">Suit</a></li>
-                <li><a class="block px-6 py-2 text-[0.82rem] tracking-[0.1em] uppercase text-[#555] hover:text-[#1a1a1a] transition-colors" href="{% url 'gowns:collection_ball_gown' %}">Ball gown</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collections' %}">All Collections</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collection_dresses' %}">Dresses</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collection_filipiniana' %}">Filipiniana</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collection_kid_suit' %}">Kids Suit</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collection_wedding' %}">Wedding</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collection_suit' %}">Suit</a></li>
+                <li><a class="block px-6 py-2.5 text-[0.72rem] tracking-[0.12em] uppercase text-[#555] hover:text-[#1a1a1a] hover:bg-black/3 transition-colors" href="{% url 'gowns:collection_ball_gown' %}">Ball Gown</a></li>
               </ul>
             </div>
           </div>
 
           <div class="relative group h-full flex items-center">
-            <a class="text-[0.82rem] font-medium tracking-[0.12em] uppercase text-[#1a1a1a] hover:text-[#555] transition-colors duration-200" href="{% url 'gowns:how_it_works' %}">
+            <a class="nav-link-underline nav-active-dot {% if url_name == 'how_it_works' %}active{% endif %} text-[0.72rem] font-medium tracking-[0.18em] uppercase text-[#1a1a1a] hover:text-[#555] transition-colors duration-200" href="{% url 'gowns:how_it_works' %}">
               How it Works
             </a>
           </div>
@@ -141,13 +187,13 @@
         {% endif %}
       </div>
 
-      <!-- Center: Search bar (hidden on reservation and confirmation) -->
+      <!-- Center: Pill search bar (hidden on reservation and confirmation) -->
       {% if url_name != "reservation" and url_name != "confirmation" %}
       <div class="flex-1 hidden md:flex justify-center">
-        <div class="relative w-full max-w-sm">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black/30 text-[1rem] pointer-events-none">search</span>
+        <div class="relative w-full max-w-xs">
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-black/25 text-[0.95rem] pointer-events-none">search</span>
           <input id="nav-search-input" type="text" placeholder="Search pieces..."
-                 class="w-full pl-9 pr-4 py-2 text-[0.8rem] bg-transparent border border-black/10 focus:outline-none focus:border-black/40 transition-colors rounded-none placeholder:text-black/30 font-body"
+                 class="w-full pl-9 pr-4 py-2 text-[0.75rem] bg-black/4 border border-black/8 focus:outline-none focus:border-black/25 focus:bg-white transition-all rounded-full placeholder:text-black/30 font-body"
                  onfocus="openSearchFromNav(this)" oninput="syncNavSearch(this.value)" />
         </div>
       </div>
@@ -156,23 +202,41 @@
       {% endif %}
 
       <!-- Right: Icon buttons -->
-      <div class="flex gap-5 items-center shrink-0">
+      <div class="flex gap-4 items-center shrink-0 pl-2 border-l border-black/8">
         {% if url_name != "confirmation" %}
           {% if url_name != "reservation" %}
-          <button type="button" class="text-[#1a1a1a] hover:text-[#555] transition-colors" onclick="toggleAI()" aria-label="Arabela Recommends">
+          <button type="button" class="nav-icon-btn text-[#1a1a1a] hover:text-[#555]" onclick="toggleAI()" aria-label="Arabela Recommends">
             <span class="material-symbols-outlined text-[1.1rem]" style='font-variation-settings: "FILL" 1;'>auto_fix_high</span>
           </button>
           {% endif %}
-          <button type="button" class="text-[#1a1a1a] hover:text-[#555] transition-colors" onclick="toggleCart()" aria-label="Open selection">
+          <button type="button" id="cart-icon-btn" class="nav-icon-btn relative text-[#1a1a1a] hover:text-[#555]" onclick="toggleCart()" aria-label="Open selection">
             <span class="material-symbols-outlined text-[1.1rem]">shopping_bag</span>
+            <span id="cart-badge" class="cart-badge">0</span>
           </button>
           {% if request.user.is_authenticated %}
-            <button type="button" class="user-profile-redirect-btn text-[#1a1a1a] hover:text-[#555] transition-colors" aria-label="Open account menu">
-              <span class="material-symbols-outlined text-[1.1rem]">person</span>
-            </button>
+            <div class="relative">
+              <button type="button" id="user-menu-btn" class="nav-icon-btn text-[#1a1a1a] hover:text-[#555]" aria-label="Open account menu" onclick="toggleUserDropdown()">
+                <span class="material-symbols-outlined text-[1.1rem]">person</span>
+              </button>
+              <div id="user-dropdown" class="absolute right-0 top-full mt-3 w-48 bg-white border border-black/8 shadow-lg z-[90] py-2">
+                <a href="{% url 'gowns:profile' %}" class="flex items-center gap-3 px-5 py-3 text-[0.75rem] uppercase tracking-[0.12em] text-[#444] hover:text-[#111] hover:bg-black/3 transition-colors font-body">
+                  <span class="material-symbols-outlined text-[1rem]">person</span>
+                  Profile
+                </a>
+                <a href="{% url 'gowns:orders' %}" class="flex items-center gap-3 px-5 py-3 text-[0.75rem] uppercase tracking-[0.12em] text-[#444] hover:text-[#111] hover:bg-black/3 transition-colors font-body">
+                  <span class="material-symbols-outlined text-[1rem]">receipt_long</span>
+                  My Reservations
+                </a>
+                <div class="border-t border-black/5 my-1"></div>
+                <a href="{% url 'account_logout' %}" class="flex items-center gap-3 px-5 py-3 text-[0.75rem] uppercase tracking-[0.12em] text-error hover:bg-error-container/30 transition-colors font-body">
+                  <span class="material-symbols-outlined text-[1rem]">logout</span>
+                  Sign Out
+                </a>
+              </div>
+            </div>
           {% else %}
             <a href="{% url 'accounts:login' %}">
-              <button type="button" class="text-[#1a1a1a] hover:text-[#555] transition-colors">
+              <button type="button" class="nav-icon-btn text-[#1a1a1a] hover:text-[#555]">
                 <span class="material-symbols-outlined text-[1.1rem]">person</span>
               </button>
             </a>
@@ -324,7 +388,7 @@
   </button>
   {% endif %}
 
-  <main class="{% block main_class %}pt-20{% endblock %}">
+  <main class="{% block main_class %}pt-24{% endblock %}">
     {% block content %}{% endblock %}
   </main>
 
@@ -577,6 +641,7 @@
       setDrawerCart(cart);
       renderCartDrawer();
       updateCartTotals();
+      updateCartBadge();
     }
 
     function cartRemoveLine(btn) {
@@ -626,6 +691,7 @@
       setDrawerCart(cart);
       renderCartDrawer();
       updateCartTotals();
+      updateCartBadge();
       if (typeof toggleCart === 'function') toggleCart();
     };
 
@@ -772,31 +838,81 @@
       input.value = '';
     }
 
+    /* ── Person icon dropdown ── */
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('user-dropdown');
+      if (!dropdown) return;
+      dropdown.classList.toggle('open');
+    }
+
+    document.addEventListener('click', function (e) {
+      const btn = document.getElementById('user-menu-btn');
+      const dropdown = document.getElementById('user-dropdown');
+      if (!dropdown || !btn) return;
+      if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+
+    /* ── Navbar scroll & hide/show (effects 1 & 9) ── */
+    (function () {
+      const header = document.getElementById('main-header');
+      if (!header) return;
+      let lastY = window.scrollY;
+      let ticking = false;
+
+      function onScroll() {
+        const y = window.scrollY;
+        if (y > 10) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+        if (y > lastY && y > 80) header.classList.add('nav-hidden');
+        else header.classList.remove('nav-hidden');
+        lastY = y;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+      }, { passive: true });
+    })();
+
+    /* ── Cart badge update (effect 4) ── */
+    function updateCartBadge() {
+      const badge = document.getElementById('cart-badge');
+      if (!badge) return;
+      const cart = getDrawerCart();
+      const count = cart.reduce(function (n, i) { return n + (Math.max(1, Number(i.qty) || 1)); }, 0);
+      badge.textContent = count > 99 ? '99+' : String(count);
+      if (count > 0) badge.classList.add('visible');
+      else badge.classList.remove('visible');
+    }
+
+    /* ── Cart shake on item add (effect 10) ── */
+    const _origAddCollectionItem = window.addCollectionItem;
+    window.addCollectionItem = function (item) {
+      if (_origAddCollectionItem) _origAddCollectionItem(item);
+      const btn = document.getElementById('cart-icon-btn');
+      if (btn) {
+        btn.classList.remove('cart-shake');
+        void btn.offsetWidth;
+        btn.classList.add('cart-shake');
+        btn.addEventListener('animationend', function () { btn.classList.remove('cart-shake'); }, { once: true });
+      }
+      updateCartBadge();
+    };
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function () {
         renderCartDrawer();
         updateCartTotals();
+        updateCartBadge();
       });
     } else {
       renderCartDrawer();
       updateCartTotals();
+      updateCartBadge();
     }
   </script>
-
-  {% if request.user.is_authenticated %}
-  <script>
-    (function () {
-      const userButtons = document.querySelectorAll('.user-profile-redirect-btn');
-      if (!userButtons.length) return;
-
-      userButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          window.location.href = "{% url 'gowns:profile' %}";
-        });
-      });
-    })();
-  </script>
-  {% endif %}
 
   {% block extra_scripts %}{% endblock %}
 </body>

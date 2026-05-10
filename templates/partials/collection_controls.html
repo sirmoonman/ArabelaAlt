@@ -1,0 +1,53 @@
+<div class="flex gap-3 flex-wrap items-center">
+
+  <!-- Browse / Reset -->
+  <button id="col-browse" onclick="collectionReset()"
+    class="col-ctrl-btn px-6 py-2.5 rounded-full border border-black bg-white text-black text-[0.65rem] font-bold tracking-[0.15em] hover:bg-gray-50 transition-colors uppercase">
+    BROWSE
+  </button>
+
+  <!-- Sort By -->
+  <div class="relative">
+    <button id="col-sort-btn" onclick="toggleSortDropdown()"
+      class="col-ctrl-btn flex items-center gap-1.5 px-6 py-2.5 rounded-full border border-black bg-white text-black text-[0.65rem] font-bold tracking-[0.15em] hover:bg-gray-50 transition-colors uppercase">
+      <span id="col-sort-label">SORT BY</span>
+      <span class="material-symbols-outlined text-[0.9rem] leading-none">expand_more</span>
+    </button>
+    <div id="sort-dropdown" class="hidden absolute top-full left-0 mt-2 w-52 bg-white border border-black/10 shadow-lg z-50 py-2">
+      <button onclick="applySort('price-asc')"  class="sort-opt w-full text-left px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.1em] text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">Price: Low → High</button>
+      <button onclick="applySort('price-desc')" class="sort-opt w-full text-left px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.1em] text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">Price: High → Low</button>
+      <button onclick="applySort('name-asc')"   class="sort-opt w-full text-left px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.1em] text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">Name: A → Z</button>
+      <button onclick="applySort('name-desc')"  class="sort-opt w-full text-left px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.1em] text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">Name: Z → A</button>
+    </div>
+  </div>
+
+  <!-- Refine (price range) -->
+  <div class="relative">
+    <button id="col-refine-btn" onclick="toggleRefineDropdown()"
+      class="col-ctrl-btn flex items-center gap-1.5 px-6 py-2.5 rounded-full border border-black bg-white text-black text-[0.65rem] font-bold tracking-[0.15em] hover:bg-gray-50 transition-colors uppercase">
+      REFINE
+      <span class="material-symbols-outlined text-[0.9rem] leading-none">expand_more</span>
+    </button>
+    <div id="refine-dropdown" class="hidden absolute top-full left-0 mt-2 w-60 bg-white border border-black/10 shadow-lg z-50 p-5">
+      <p class="text-[0.65rem] uppercase tracking-[0.2em] text-gray-400 mb-4">Price Range (₱)</p>
+      <div class="flex gap-3 items-end mb-5">
+        <div class="flex-1">
+          <label class="text-[0.6rem] text-gray-400 uppercase tracking-widest">Min</label>
+          <input id="refine-min" type="number" min="0" placeholder="0"
+            class="w-full mt-1 border-b border-gray-200 focus:border-black outline-none text-sm py-1 bg-transparent">
+        </div>
+        <span class="text-gray-300 mb-1.5">—</span>
+        <div class="flex-1">
+          <label class="text-[0.6rem] text-gray-400 uppercase tracking-widest">Max</label>
+          <input id="refine-max" type="number" min="0" placeholder="Any"
+            class="w-full mt-1 border-b border-gray-200 focus:border-black outline-none text-sm py-1 bg-transparent">
+        </div>
+      </div>
+      <button onclick="applyRefine()"
+        class="w-full bg-black text-white text-[0.65rem] uppercase tracking-[0.15em] py-2.5 hover:bg-gray-800 transition-colors">
+        Apply
+      </button>
+    </div>
+  </div>
+
+</div>

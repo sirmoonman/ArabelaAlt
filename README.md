@@ -353,3 +353,23 @@ Full visual and animation overhaul of `/how-it-works/`:
 - `settings.py` — Google OAuth `APP` block added, reads `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` from `.env`
 - `login.html` — Google sign-in button re-added with hardcoded `/accounts/google/login/` URL (no template tag crash)
 - `signup.html` — Removed `{% load socialaccount %}` dependency, hardcoded Google login URL
+
+---
+
+## Fourth Session Updates
+
+### Collection Controls — Sort & Filter (all 6 collections)
+
+- **Browse** — resets all active sort/filter state, shows all cards, returns buttons to default style
+- **Sort By** — dropdown with 4 options: Price ↑, Price ↓, Name A→Z, Name Z→A; button turns black when active
+- **Refine** — dropdown with Min/Max price inputs and Apply button; hides cards outside the range; button turns black when a filter is active
+- Active button state toggles back to white when reset via Browse
+- Shared via `templates/partials/collection_controls.html` — one partial included in all 6 collection templates
+- JS runs once in `base.html`, guarded by `#collection-grid` so it only activates on collection pages
+- Added `id="collection-grid"` to the product grid in all 6 collection templates
+
+### Email Verification Fix
+
+- `.env` — switched `EMAIL_BACKEND` from SMTP to `console.EmailBackend` for local development (emails print to terminal)
+- `accounts/views.py` — widened `except SMTPException` to `except Exception` to catch all email send failures (e.g. `ConnectionRefusedError`)
+- Removed unused `from smtplib import SMTPException` import

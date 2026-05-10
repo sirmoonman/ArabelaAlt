@@ -7,7 +7,6 @@ from django.core.validators import validate_email
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
-from smtplib import SMTPException
 import random
 import re
 from allauth.account.models import EmailAddress
@@ -185,7 +184,7 @@ def signup_view(request):
                 request.session['verification_code'] = verification_code
                 try:
                     _send_verification_code(request, email, verification_code)
-                except SMTPException:
+                except Exception:
                     return render(
                         request,
                         'signup.html',
@@ -226,7 +225,7 @@ def signup_view(request):
 
         try:
             _send_verification_code(request, email, verification_code)
-        except SMTPException:
+        except Exception:
             user.delete()
             return render(
                 request,

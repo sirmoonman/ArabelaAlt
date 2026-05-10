@@ -915,6 +915,125 @@
   </script>
 
   {% block extra_scripts %}{% endblock %}
+
+  <script>
+  // Collection sort / filter — only activates on pages with #collection-grid
+  (function () {
+    const grid = document.getElementById('collection-grid');
+    if (!grid) return;
+
+    let currentSort = null;
+    let activeMin = null;
+    let activeMax = null;
+
+    function cards() { return Array.from(grid.querySelectorAll(':scope > a')); }
+
+    function price(card) {
+      const el = card.querySelector('p');
+      return el ? parseInt(el.textContent.replace(/[^\d]/g, ''), 10) || 0 : 0;
+    }
+
+    function name(card) {
+      const el = card.querySelector('h3');
+      return el ? el.textContent.trim().toLowerCase() : '';
+    }
+
+    function applyAll() {
+      const all = cards();
+      all.forEach(c => {
+        const p = price(c);
+        const inRange = (activeMin === null || p >= activeMin) && (activeMax === null || p <= activeMax);
+        c.style.display = inRange ? '' : 'none';
+      });
+      const visible = all.filter(c => c.style.display !== 'none');
+      const hidden  = all.filter(c => c.style.display === 'none');
+      if (currentSort) {
+        visible.sort((a, b) => {
+          if (currentSort === 'price-asc')  return price(a) - price(b);
+          if (currentSort === 'price-desc') return price(b) - price(a);
+          if (currentSort === 'name-asc')   return name(a).localeCompare(name(b));
+          if (currentSort === 'name-desc')  return name(b).localeCompare(name(a));
+          return 0;
+        });
+      }
+      [...visible, ...hidden].forEach(c => grid.appendChild(c));
+    }
+
+    function setActive(btnId, active) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.classList.toggle('bg-black', active);
+      btn.classList.toggle('text-white', active);
+      btn.classList.toggle('bg-white', !active);
+      btn.classList.toggle('text-black', !active);
+    }
+
+    window.applySort = function (type) {
+      currentSort = type;
+      const labels = { 'price-asc': 'Price ↑', 'price-desc': 'Price ↓', 'name-asc': 'A → Z', 'name-desc': 'Z → A' };
+      const label = document.getElementById('col-sort-label');
+      if (label) label.textContent = labels[type];
+      setActive('col-sort-btn', true);
+      closeAll();
+      applyAll();
+    };
+
+    window.applyRefine = function () {
+      const minEl = document.getElementById('refine-min');
+      const maxEl = document.getElementById('refine-max');
+      activeMin = minEl && minEl.value !== '' ? parseInt(minEl.value) : null;
+      activeMax = maxEl && maxEl.value !== '' ? parseInt(maxEl.value) : null;
+      setActive('col-refine-btn', activeMin !== null || activeMax !== null);
+      closeAll();
+      applyAll();
+    };
+
+    window.collectionReset = function () {
+      currentSort = null; activeMin = null; activeMax = null;
+      const minEl = document.getElementById('refine-min');
+      const maxEl = document.getElementById('refine-max');
+      if (minEl) minEl.value = '';
+      if (maxEl) maxEl.value = '';
+      const label = document.getElementById('col-sort-label');
+      if (label) label.textContent = 'SORT BY';
+      setActive('col-sort-btn', false);
+      setActive('col-refine-btn', false);
+      cards().forEach(c => c.style.display = '');
+    };
+
+    function closeAll() {
+      ['sort-dropdown', 'refine-dropdown'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
+    window.toggleSortDropdown = function () {
+      const sd = document.getElementById('sort-dropdown');
+      const rd = document.getElementById('refine-dropdown');
+      if (rd) rd.classList.add('hidden');
+      if (sd) sd.classList.toggle('hidden');
+    };
+
+    window.toggleRefineDropdown = function () {
+      const sd = document.getElementById('sort-dropdown');
+      const rd = document.getElementById('refine-dropdown');
+      if (sd) sd.classList.add('hidden');
+      if (rd) rd.classList.toggle('hidden');
+    };
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('#col-sort-btn') && !e.target.closest('#sort-dropdown')) {
+        const sd = document.getElementById('sort-dropdown');
+        if (sd) sd.classList.add('hidden');
+      }
+      if (!e.target.closest('#col-refine-btn') && !e.target.closest('#refine-dropdown')) {
+        const rd = document.getElementById('refine-dropdown');
+        if (rd) rd.classList.add('hidden');
+      }
+    });
+  })();
+  </script>
 </body>
 {% endwith %}
 </html>

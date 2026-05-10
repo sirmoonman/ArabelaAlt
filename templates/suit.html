@@ -7,15 +7,11 @@
 {% block content %}
     <section class="mb-16 max-w-[1400px] mx-auto">
         <h1 class="font-headline text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-on-surface leading-[0.9] mb-12 text-center">Suit</h1>
-        <div class="flex gap-4 flex-wrap">
-            <button class="px-6 py-2.5 rounded-full border border-black bg-white text-black text-[0.65rem] font-bold tracking-[0.15em] hover:bg-gray-50 transition-colors uppercase">BROWSE</button>
-            <button class="px-6 py-2.5 rounded-full border border-black bg-white text-black text-[0.65rem] font-bold tracking-[0.15em] hover:bg-gray-50 transition-colors uppercase">SORT BY</button>
-            <button class="px-6 py-2.5 rounded-full border border-black bg-white text-black text-[0.65rem] font-bold tracking-[0.15em] hover:bg-gray-50 transition-colors uppercase">REFINE</button>
-        </div>
+        {% include "partials/collection_controls.html" %}
     </section>
 
     <section class="max-w-[1400px] mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div id="collection-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <a href="{% url 'gowns:product_detail' collection='suit' slug='valencia-lace' %}" class="group cursor-pointer block">
                 <div class="relative overflow-hidden bg-surface-container-high aspect-[3/5]">
                     <img alt="Suit One" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWwrpy8uS-dW3ZxUAzQRBag3p7bHigf95fvt9Qjq3GKrti53LrtFjCIU8hTk7NSu9Rcb56irXvF6VDm6k3QIv3PuwuatCEzUgKwt7OHD3rZc-Zlb7Ulhq3t6_MksIn2empBq_1O7rGoADAHQKDmz6jjTC-tJshsyApRfU_GsEP-b9g1RrBtelVWDnun2znYC7jER7ZFsCROeSDV_720shVeiCzDRohzWaPR-xAqaZJmFH_3ixXmZFbhQF0kUWvPu61-8C9RIKmXiA"/>
